@@ -1,0 +1,16 @@
+C:\Users\BrandonF\Desktop\Helper Projects\WFMV10CI\WFMV10CI\bin\Debug\WFMV10CI.exe.config
+C:\Users\BrandonF\Desktop\Helper Projects\WFMV10CI\WFMV10CI\bin\Debug\WFMV10CI.exe
+C:\Users\BrandonF\Desktop\Helper Projects\WFMV10CI\WFMV10CI\bin\Debug\WFMV10CI.pdb
+C:\Users\BrandonF\Desktop\Helper Projects\WFMV10CI\WFMV10CI\obj\x86\Debug\WFMV10CI.exe
+C:\Users\BrandonF\Desktop\Helper Projects\WFMV10CI\WFMV10CI\obj\x86\Debug\WFMV10CI.pdb
+\\devwfmv10\c$\Build Scripts\WFMV10CI\WFMV10CI\bin\Debug\WFMV10CI.exe.config
+\\devwfmv10\c$\Build Scripts\WFMV10CI\WFMV10CI\obj\x86\Debug\WFMV10CI.exe
+\\devwfmv10\c$\Build Scripts\WFMV10CI\WFMV10CI\obj\x86\Debug\WFMV10CI.pdb
+\\devwfmv10\c$\Build Scripts\WFMV10CI\WFMV10CI\bin\Debug\WFMV10CI.exe
+\\devwfmv10\c$\Build Scripts\WFMV10CI\WFMV10CI\bin\Debug\WFMV10CI.pdb
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\bin\Debug\WFMV10CI.exe.config
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\obj\x86\Debug\WFMV10CI.exe
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\obj\x86\Debug\WFMV10CI.pdb
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\bin\Debug\WFMV10CI.exe
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\bin\Debug\WFMV10CI.pdb
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\obj\x86\Debug\ResolveAssemblyReference.cache

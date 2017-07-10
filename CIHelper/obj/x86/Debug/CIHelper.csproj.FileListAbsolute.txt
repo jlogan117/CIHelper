@@ -1,0 +1,27 @@
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\bin\Debug\CIHelper.exe.config
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\bin\Debug\CIHelper.exe
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\bin\Debug\CIHelper.pdb
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\obj\x86\Debug\CIHelper.exe
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\obj\x86\Debug\CIHelper.pdb
+C:\Build Scripts\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe.config
+C:\Build Scripts\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.exe
+C:\Build Scripts\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.pdb
+C:\Build Scripts\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe
+C:\Build Scripts\CIHelperApp\CIHelper\bin\Debug\CIHelper.pdb
+C:\Build Scripts\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
+\\devhitv10\c$\Build Scripts\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe.config
+\\devhitv10\c$\Build Scripts\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.exe
+\\devhitv10\c$\Build Scripts\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.pdb
+C:\Projects\CIHelper\CIHelper\bin\Debug\CIHelper.exe.config
+C:\Projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.exe
+C:\Projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.pdb
+C:\Projects\CIHelper\CIHelper\bin\Debug\CIHelper.exe
+C:\Projects\CIHelper\CIHelper\bin\Debug\CIHelper.pdb
+C:\Projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
+C:\projects\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe.config
+C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.exe
+C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.pdb
+C:\projects\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe
+C:\projects\CIHelperApp\CIHelper\bin\Debug\CIHelper.pdb
+C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache

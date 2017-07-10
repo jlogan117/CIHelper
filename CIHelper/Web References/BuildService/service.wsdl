@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/BuildService" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/BuildService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">BuildServer Status Monitoring</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/BuildService">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="UpdateServerStatus2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="uid" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s1:char" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateServerStatus2Response">
+        <s:complexType />
+      </s:element>
+      <s:element name="UpdateServerStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="uid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateServerStatusResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UpdateSqlServerStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="uid" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s1:char" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateSqlServerStatusResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetServerStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="uid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetServerStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetServerStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BuildRequest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="envname" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="buildno" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BuildRequestResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="char">
+        <s:restriction base="s:unsignedShort" />
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="UpdateServerStatus2SoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateServerStatus2" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatus2SoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateServerStatus2Response" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateServerStatus" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateServerStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSqlServerStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateSqlServerStatus" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSqlServerStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateSqlServerStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetServerStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetServerStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetServerStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetServerStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="BuildRequestSoapIn">
+    <wsdl:part name="parameters" element="tns:BuildRequest" />
+  </wsdl:message>
+  <wsdl:message name="BuildRequestSoapOut">
+    <wsdl:part name="parameters" element="tns:BuildRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatus2HttpGetIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+    <wsdl:part name="status" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatus2HttpGetOut" />
+  <wsdl:message name="UpdateServerStatusHttpGetIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatusHttpGetOut" />
+  <wsdl:message name="UpdateSqlServerStatusHttpGetIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+    <wsdl:part name="status" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSqlServerStatusHttpGetOut" />
+  <wsdl:message name="GetServerStatusHttpGetIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetServerStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="BuildRequestHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="envname" type="s:string" />
+    <wsdl:part name="buildno" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="BuildRequestHttpGetOut" />
+  <wsdl:message name="UpdateServerStatus2HttpPostIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+    <wsdl:part name="status" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatus2HttpPostOut" />
+  <wsdl:message name="UpdateServerStatusHttpPostIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateServerStatusHttpPostOut" />
+  <wsdl:message name="UpdateSqlServerStatusHttpPostIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+    <wsdl:part name="status" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSqlServerStatusHttpPostOut" />
+  <wsdl:message name="GetServerStatusHttpPostIn">
+    <wsdl:part name="servername" type="s:string" />
+    <wsdl:part name="uid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetServerStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="BuildRequestHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="envname" type="s:string" />
+    <wsdl:part name="buildno" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="BuildRequestHttpPostOut" />
+  <wsdl:portType name="BuildServiceSoap">
+    <wsdl:operation name="UpdateServerStatus2">
+      <wsdl:input message="tns:UpdateServerStatus2SoapIn" />
+      <wsdl:output message="tns:UpdateServerStatus2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <wsdl:input message="tns:UpdateServerStatusSoapIn" />
+      <wsdl:output message="tns:UpdateServerStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <wsdl:input message="tns:UpdateSqlServerStatusSoapIn" />
+      <wsdl:output message="tns:UpdateSqlServerStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <wsdl:input message="tns:GetServerStatusSoapIn" />
+      <wsdl:output message="tns:GetServerStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <wsdl:input message="tns:BuildRequestSoapIn" />
+      <wsdl:output message="tns:BuildRequestSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="BuildServiceHttpGet">
+    <wsdl:operation name="UpdateServerStatus2">
+      <wsdl:input message="tns:UpdateServerStatus2HttpGetIn" />
+      <wsdl:output message="tns:UpdateServerStatus2HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <wsdl:input message="tns:UpdateServerStatusHttpGetIn" />
+      <wsdl:output message="tns:UpdateServerStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <wsdl:input message="tns:UpdateSqlServerStatusHttpGetIn" />
+      <wsdl:output message="tns:UpdateSqlServerStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <wsdl:input message="tns:GetServerStatusHttpGetIn" />
+      <wsdl:output message="tns:GetServerStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <wsdl:input message="tns:BuildRequestHttpGetIn" />
+      <wsdl:output message="tns:BuildRequestHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="BuildServiceHttpPost">
+    <wsdl:operation name="UpdateServerStatus2">
+      <wsdl:input message="tns:UpdateServerStatus2HttpPostIn" />
+      <wsdl:output message="tns:UpdateServerStatus2HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <wsdl:input message="tns:UpdateServerStatusHttpPostIn" />
+      <wsdl:output message="tns:UpdateServerStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <wsdl:input message="tns:UpdateSqlServerStatusHttpPostIn" />
+      <wsdl:output message="tns:UpdateSqlServerStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <wsdl:input message="tns:GetServerStatusHttpPostIn" />
+      <wsdl:output message="tns:GetServerStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <wsdl:input message="tns:BuildRequestHttpPostIn" />
+      <wsdl:output message="tns:BuildRequestHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BuildServiceSoap" type="tns:BuildServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="UpdateServerStatus2">
+      <soap:operation soapAction="http://tempuri.org/BuildService/UpdateServerStatus2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <soap:operation soapAction="http://tempuri.org/BuildService/UpdateServerStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <soap:operation soapAction="http://tempuri.org/BuildService/UpdateSqlServerStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <soap:operation soapAction="http://tempuri.org/BuildService/GetServerStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <soap:operation soapAction="http://tempuri.org/BuildService/BuildRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BuildServiceSoap12" type="tns:BuildServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="UpdateServerStatus2">
+      <soap12:operation soapAction="http://tempuri.org/BuildService/UpdateServerStatus2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <soap12:operation soapAction="http://tempuri.org/BuildService/UpdateServerStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <soap12:operation soapAction="http://tempuri.org/BuildService/UpdateSqlServerStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <soap12:operation soapAction="http://tempuri.org/BuildService/GetServerStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <soap12:operation soapAction="http://tempuri.org/BuildService/BuildRequest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BuildServiceHttpGet" type="tns:BuildServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="UpdateServerStatus2">
+      <http:operation location="/UpdateServerStatus2" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <http:operation location="/UpdateServerStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <http:operation location="/UpdateSqlServerStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <http:operation location="/GetServerStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <http:operation location="/BuildRequest" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BuildServiceHttpPost" type="tns:BuildServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="UpdateServerStatus2">
+      <http:operation location="/UpdateServerStatus2" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateServerStatus">
+      <http:operation location="/UpdateServerStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSqlServerStatus">
+      <http:operation location="/UpdateSqlServerStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <http:operation location="/GetServerStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BuildRequest">
+      <http:operation location="/BuildRequest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output />
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BuildService">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">BuildServer Status Monitoring</wsdl:documentation>
+    <wsdl:port name="BuildServiceSoap" binding="tns:BuildServiceSoap">
+      <soap:address location="http://devuod01:8080/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="BuildServiceSoap12" binding="tns:BuildServiceSoap12">
+      <soap12:address location="http://devuod01:8080/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="BuildServiceHttpGet" binding="tns:BuildServiceHttpGet">
+      <http:address location="http://devuod01:8080/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="BuildServiceHttpPost" binding="tns:BuildServiceHttpPost">
+      <http:address location="http://devuod01:8080/service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

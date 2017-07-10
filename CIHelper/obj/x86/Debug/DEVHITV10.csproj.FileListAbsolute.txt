@@ -1,0 +1,11 @@
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\obj\x86\Debug\ResolveAssemblyReference.cache
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\bin\Debug\DEVHITV10.exe.config
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\bin\Debug\DEVHITV10.exe
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\bin\Debug\DEVHITV10.pdb
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\obj\x86\Debug\DEVHITV10.exe
+\\devhitv10\c$\Build Scripts\devhitv10\WFMV10CI\obj\x86\Debug\DEVHITV10.pdb
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\bin\Debug\DEVHITV10.exe.config
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\obj\x86\Debug\DEVHITV10.exe
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\obj\x86\Debug\DEVHITV10.pdb
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\bin\Debug\CIHelper.exe.config
+C:\Users\jamesl.USCORP\Desktop\devhitv10\CIHelper\obj\x86\Debug\ResolveAssemblyReference.cache
