@@ -25,3 +25,9 @@ C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.pdb
 C:\projects\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe
 C:\projects\CIHelperApp\CIHelper\bin\Debug\CIHelper.pdb
 C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
+C:\Projects\CIHelperGit\CIHelper\CIHelper\bin\Debug\CIHelper.exe.config
+C:\Projects\CIHelperGit\CIHelper\CIHelper\bin\Debug\CIHelper.exe
+C:\Projects\CIHelperGit\CIHelper\CIHelper\bin\Debug\CIHelper.pdb
+C:\Projects\CIHelperGit\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
+C:\Projects\CIHelperGit\CIHelper\CIHelper\obj\x86\Debug\CIHelper.exe
+C:\Projects\CIHelperGit\CIHelper\CIHelper\obj\x86\Debug\CIHelper.pdb

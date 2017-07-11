@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="ResultsLog\ResultsLog.cs" />
     <Compile Include="SaveTestResults\SaveTestResults.cs" />
+    <Compile Include="SlackMessage.cs" />
     <Compile Include="UOD\UOD.cs" />
     <Compile Include="Web References\BuildService\Reference.cs">
       <AutoGen>True</AutoGen>

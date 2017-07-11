@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using CIHelper.CreateRcloud;
 
 namespace CIHelper
@@ -57,6 +60,37 @@ namespace CIHelper
                     }
                     Console.WriteLine("Invalid parameter amount.");
                     return 1;
+                case "-getpassed":
+                    List<SlackMessage> slackList = new List<SlackMessage>();
+                    //String result = File.ReadAllText(string.Format(@"\\devodw801\c$\{0}\{1}", args[1], args[2]));
+                    var resultFiles = Directory.GetFiles(string.Format(@"\\{0}\c$\{1}\{2}", args[1], args[2], args[3]));
+                    var resultTextFiles = resultFiles.Where(x => x.EndsWith(".txt")).AsEnumerable();
+                    var fileList = resultTextFiles.ToList();
+                    foreach (var path in fileList)
+                    {
+                        var resultText = File.ReadAllText(path);
+                        int value = resultText.LastIndexOf("Passed");
+                        var resultarray = resultText.Substring(value).Split(':');
+                        var passedValue = resultarray[1].Split(',')[0];
+                        var failedValue = resultarray[2].Split(',')[0];
+                        var index = path.LastIndexOf(@"\");
+                        var newText = path.Substring(index);
+                        var stage = newText.Replace(".txt", "").Replace(@"\", "");
+                        slackList.Add(new SlackMessage(stage, passedValue, failedValue));
+                    }
+                    int totalPassed = 0;
+                    int totalFailed = 0;
+                    foreach (SlackMessage msg in slackList)
+                    {
+                        Console.WriteLine(msg.stage+ ":");
+                        Console.WriteLine("PASSED: " + msg.passed + "\t" + "FAILED: " + msg.failed);
+                        totalPassed += Convert.ToInt32(msg.passed);
+                        totalFailed += Convert.ToInt32(msg.failed);
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine("Total ***********************");
+                    Console.WriteLine("PASSED: " + totalPassed + "\t" + "FAILED: " + totalFailed);
+                    return 0;
                 default:
                     throw new Exception("First Argument Not Understood");
             }
