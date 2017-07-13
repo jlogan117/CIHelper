@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CIHelper.CreateRcloud;
+using CIHelper.OnbConfig;
 
 namespace CIHelper
 {
@@ -19,6 +20,8 @@ namespace CIHelper
 
             switch (args[0].ToLower())
             {
+                case "-setappconfig":
+                    return AppConfig.UpdateAppConfigValue(args[1], args[2], args[3]);
                 //case "-uod":
                 //    return UOD.RequestUOD(args[1]);
                 //case "-uodlog":
