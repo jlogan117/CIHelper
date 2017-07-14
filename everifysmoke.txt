@@ -10,7 +10,7 @@ stages {
 			script {
 				try {
 					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
-					bat"C:\\CIHelper.exe -rcloud delete EverifySmoke onb MarcosN"
+					bat"C:\\CIHelper.exe -rcloud delete EvSmoke onb marcosn"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
@@ -26,7 +26,7 @@ stages {
 		steps {
 			script {
 				try {
-					bat"C:\\CIHelper.exe -rcloud create EverifySmoke onb MarcosN"
+					bat"C:\\CIHelper.exe -rcloud create EvSmoke onb marcosn"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
