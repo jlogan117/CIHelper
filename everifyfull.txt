@@ -1,0 +1,134 @@
+pipeline {
+    agent { 
+		label 'DEVODW709'
+	}
+	
+stages {
+    
+	stage('Run EVerifyAutomatic Tests') {
+		steps {
+			script {
+				try {
+					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifyAutomatic\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyAutomatic.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyAutomatic.html\" /y "
+				}
+			}
+		}
+	}
+	
+	stage('Run EVerifyDhs Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifyDhs\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDhs.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDhs.html\" /y "
+				}
+			}
+		}
+	}
+	
+	stage('Run EVerifyDuplicateAndResolveCase Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifyDuplicateAndResolveCase\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDuplicateAndResolveCase.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDuplicateAndResolveCase.html\" /y "
+				}
+			}
+		}
+	}
+
+	stage('Run EVerifySsa Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifySsa\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySsa.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySsa.html\" /y "
+				}
+			}
+		}
+	}
+
+	stage('Run EVerifySubmitInitial Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifySubmiteIntial\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySubmiteIntial.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySubmiteIntial.html\" /y "
+				}
+			}
+		}
+	}
+	stage('Slack Notification') {
+		steps {
+			script {
+				try {
+				   def params = "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
+				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
+				   work = work.substring(111).trim()
+				   notifyBuild("${currentBuild.result}", "${work}")
+                }
+                catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To Report Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+    }	
+}
+}
+def notifyBuild(String buildStatus = 'SUCCESS', String work) {
+	    if (buildStatus == "null") {
+            color = 'GREEN'
+            colorCode = '#00FF00'
+			buildStatus = "SUCCESS"
+        } else {
+            color = 'RED'
+            colorCode = '#FF0000'
+        }
+        def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+	    slackSend channel: "#everify", color: colorCode, message: "${buildStatus}: ${env.JOB_NAME} \n ${work} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+	}
