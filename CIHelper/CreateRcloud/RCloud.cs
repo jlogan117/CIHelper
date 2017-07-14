@@ -25,11 +25,11 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "delete")
                 {
-                    return DeleteIfExists(name);
+                    return DeleteIfExists(name, owner);
                 }
                 if (command.ToLower() == "create")
                 {
-                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner=gabrieln&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding");
+                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding");
                 }
 
                 Console.WriteLine("INVALID PARAMETER HAS BEEN PASSED TO THE EXECUTABLE");

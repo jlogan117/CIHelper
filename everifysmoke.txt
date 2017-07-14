@@ -1,0 +1,173 @@
+pipeline {
+    agent { 
+		label 'DEVODW709'
+	}
+	
+stages {
+    
+	stage('Deleting Existing RCloud') {
+		steps {
+			script {
+				try {
+					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -rcloud delete EverifySmoke onb MarcosN"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To delete onboarding RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+	
+	stage('Create Onb RCloud') {
+		steps {
+			script {
+				try {
+					bat"C:\\CIHelper.exe -rcloud create EverifySmoke onb MarcosN"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To create onboarding RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+	
+	stage('SVN Update') {
+		steps {
+			script {
+				try {
+					bat"C:\\SvnUpdateEcho.bat"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To update svn \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+	
+	stage('Configure Echo') {
+		steps {
+			script {
+				try {
+					bat "echo Running on ${env.NODE_NAME}"
+					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
+					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
+					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 EverifySmoke"
+					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To configure echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+				finally{
+					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
+				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
+				}
+			}
+		}
+	}
+
+	stage('Create Onboarding Account SB122') {
+		steps {
+			script {
+				try {
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
+				}			
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To create onboarding account \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+				}
+			}
+		}
+	}
+	
+	stage('Set EVerify Credentials') {
+		steps {
+			script {
+				try {
+					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotURL https://stage.e-verify.uscis.gov/WcfWebService/EmployerWebServiceV29.svc"
+					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilot.SubmittersPhoneNbr 9543317000"
+					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotClientCompanyId 23036"
+					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotLogonId JSTA2903"
+					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotPswd Jul13@hit!"
+					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.EVerify.Certification True"
+				}			
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To set everify credentials\n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+        
+	stage('Run EVerify Smoke Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerify\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.html\" /y "
+				}
+			}
+		}
+	}
+	stage('Slack Notification') {
+		steps {
+			script {
+				try {
+				   def params = "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
+				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
+				   work = work.substring(111).trim()
+				   notifyBuild("${currentBuild.result}", "${work}")
+                }
+                catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#everify", color: '#FF0000', message: "FAILED To Report Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+    }
+	
+}
+}
+def notifyBuild(String buildStatus = 'SUCCESS', String work) {
+	    if (buildStatus == "null") {
+            color = 'GREEN'
+            colorCode = '#00FF00'
+			buildStatus = "SUCCESS"
+        } else {
+            color = 'RED'
+            colorCode = '#FF0000'
+        }
+        def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+	    slackSend channel: "#everify", color: colorCode, message: "${buildStatus}: ${env.JOB_NAME} \n ${work} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+	}

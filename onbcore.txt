@@ -1,0 +1,247 @@
+pipeline {
+    agent { 
+		label 'DEVODW801'
+	}
+	
+stages {
+    
+	stage('Building Onboarding') {
+		steps {
+			script {
+				try {
+				slackSend channel: "#onbcore", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW801 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -rcloud Build ONBCITest onb"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Build Onboarding RC Branch \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+
+	stage('Deleting Existing RCloud') {
+		steps {
+			script {
+				try {
+					bat"C:\\CIHelper.exe -rcloud delete ONBCITest onb"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Delete Onb rcloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+	
+	stage('Create Onb RCloud') {
+		steps {
+			script {
+				try {
+					bat"C:\\CIHelper.exe -rcloud create ONBCITest onb"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Create onb rcloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+	
+	stage('SVN Update') {
+		steps {
+			script {
+				try {
+					bat"C:\\SvnUpdateEcho.bat"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To update svn \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+	}
+	
+	stage('Configure Echo') {
+		steps {
+			script {
+				try {
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 OnbCITest"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+                    def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Configure Echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+				finally{
+					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
+				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
+				}
+			}
+		}
+	}
+	
+	stage('Create Onboarding Account SB122') {
+		steps {
+			script {
+				try {
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
+				}			
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+                    def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Create onb account \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+				}
+			}
+		}
+	}
+        
+	stage('Run AppConfigSettings Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw801 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == AppConfigSettings\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.html\" /y "
+				}
+			}
+		}
+	}
+        
+	stage('Run FederalForms Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw801 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == FederalForms\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.html\" /y "
+				}
+			}
+		}
+	}
+		
+	stage('Run PostHireVerifyStep Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw801 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == PostHireVerifyStep\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.html\" /y "
+				}
+			}
+		}
+	}
+		
+	stage('Run NewEmployeeStep Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw801 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == NewEmployeeStep\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.html\" /y "
+				}
+			}
+		}
+	}
+		
+	stage('Run StatePanelChecks Tests') {
+		steps {
+			script {
+				try {
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw801 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == StatePanelChecks\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.txt\" "
+					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.html\" /y "
+				}
+			}
+		}
+    }
+    	stage('Slack Notification') {
+		steps {
+			script {
+				try {
+				   def params = "C:\\CIHelper.exe -getpassed DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
+				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
+				   work = work.substring(115).trim()
+				   notifyBuild("${currentBuild.result}", "${work}")
+                }
+                catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Report Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		}
+    }
+	
+}
+}
+def notifyBuild(String buildStatus = 'SUCCESS', String work) {
+	    if (buildStatus == "null") {
+            color = 'GREEN'
+            colorCode = '#00FF00'
+			buildStatus = "SUCCESS"
+        } else {
+            color = 'RED'
+            colorCode = '#FF0000'
+        }
+        def urlnba = "file://DEVODW801/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+	    slackSend channel: "#onbcore", color: colorCode, message: "${buildStatus}: ${env.JOB_NAME} \n ${work} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+	}
