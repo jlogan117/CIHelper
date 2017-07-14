@@ -59,10 +59,10 @@ stages {
 			script {
 				try {
 					bat "echo Running on ${env.NODE_NAME}"
-					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
-					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
-					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 EverifySmoke"
-					//bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 EvSmoke"
+					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
@@ -91,7 +91,6 @@ stages {
 					throw error
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 				}
 			}
@@ -102,12 +101,12 @@ stages {
 		steps {
 			script {
 				try {
-					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotURL https://stage.e-verify.uscis.gov/WcfWebService/EmployerWebServiceV29.svc"
-					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilot.SubmittersPhoneNbr 9543317000"
-					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotClientCompanyId 23036"
-					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotLogonId JSTA2903"
-					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.BasicPilotPswd Jul13@hit!"
-					bat"C:\\CIHelper.exe -setappconfig OnbCloud XpressHR.EVerify.Certification True"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotURL https://stage.e-verify.uscis.gov/WcfWebService/EmployerWebServiceV29.svc"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilot.SubmittersPhoneNbr 9543317000"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotClientCompanyId 23036"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotLogonId JSTA2903"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotPswd Jul14@hit!"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.EVerify.Certification True"
 				}			
 				catch(error){
                     currentBuild.result = 'FAILURE'
@@ -132,7 +131,6 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.html\" /y "
 				}
 			}
