@@ -71,15 +71,22 @@ namespace CIHelper
                     var fileList = resultTextFiles.ToList();
                     foreach (var path in fileList)
                     {
-                        var resultText = File.ReadAllText(path);
-                        int value = resultText.LastIndexOf("Passed");
-                        var resultarray = resultText.Substring(value).Split(':');
-                        var passedValue = resultarray[1].Split(',')[0];
-                        var failedValue = resultarray[2].Split(',')[0];
-                        var index = path.LastIndexOf(@"\");
-                        var newText = path.Substring(index);
-                        var stage = newText.Replace(".txt", "").Replace(@"\", "");
-                        slackList.Add(new SlackMessage(stage, passedValue, failedValue));
+                        try
+                        {
+                            var resultText = File.ReadAllText(path);
+                            int value = resultText.LastIndexOf("Passed");
+                            var resultarray = resultText.Substring(value).Split(':');
+                            var passedValue = resultarray[1].Split(',')[0];
+                            var failedValue = resultarray[2].Split(',')[0];
+                            var index = path.LastIndexOf(@"\");
+                            var newText = path.Substring(index);
+                            var stage = newText.Replace(".txt", "").Replace(@"\", "");
+                            slackList.Add(new SlackMessage(stage, passedValue, failedValue));
+                        }
+                        catch
+                        {
+                            slackList.Add(new SlackMessage("Error Reading Stage", "0", "0"));
+                        }
                     }
                     int totalPassed = 0;
                     int totalFailed = 0;
