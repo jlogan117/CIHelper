@@ -63,12 +63,12 @@ namespace CIHelper
                     }
                     Console.WriteLine("Invalid parameter amount.");
                     return 1;
+                case "-reportapi":
+                    List<string> txtFileList = GetTextFiles(args);
+                    return 0;
                 case "-getpassed":
                     List<SlackMessage> slackList = new List<SlackMessage>();
-                    //String result = File.ReadAllText(string.Format(@"\\devodw801\c$\{0}\{1}", args[1], args[2]));
-                    var resultFiles = Directory.GetFiles(string.Format(@"\\{0}\c$\{1}\{2}", args[1], args[2], args[3]));
-                    var resultTextFiles = resultFiles.Where(x => x.EndsWith(".txt")).AsEnumerable();
-                    var fileList = resultTextFiles.ToList();
+                    List<string> fileList = GetTextFiles(args);
                     foreach (var path in fileList)
                     {
                         try
@@ -85,25 +85,34 @@ namespace CIHelper
                         }
                         catch
                         {
-                            slackList.Add(new SlackMessage("Error Reading Stage", "0", "0"));
+                            slackList.Add(new SlackMessage("ERROR READING STAGE", "0", "0"));
                         }
                     }
                     int totalPassed = 0;
                     int totalFailed = 0;
                     foreach (SlackMessage msg in slackList)
                     {
-                        Console.WriteLine(msg.stage+ ":");
-                        Console.WriteLine("PASSED: " + msg.passed + "\t" + "FAILED: " + msg.failed);
+                        Console.Write(msg.stage+ ": ");
+                        Console.WriteLine("" + msg.passed + "/" + msg.failed);
                         totalPassed += Convert.ToInt32(msg.passed);
                         totalFailed += Convert.ToInt32(msg.failed);
                     }
                     Console.WriteLine();
-                    Console.WriteLine("Total ***********************");
-                    Console.WriteLine("PASSED: " + totalPassed + "\t" + "FAILED: " + totalFailed);
+                    Console.WriteLine();
+                    Console.Write("Total: ");
+                    Console.WriteLine(totalPassed + "/" + totalFailed);
                     return 0;
                 default:
                     throw new Exception("First Argument Not Understood");
             }
+        }
+
+        private static List<String> GetTextFiles(string[] args)
+        {
+            //String result = File.ReadAllText(string.Format(@"\\devodw801\c$\{0}\{1}", args[1], args[2]));
+            var resultFiles = Directory.GetFiles(string.Format(@"\\{0}\c$\{1}\{2}", args[1], args[2], args[3]));
+            var resultTextFiles = resultFiles.Where(x => x.EndsWith(".txt")).AsEnumerable();
+            return resultTextFiles.ToList();
         }
     }
 }

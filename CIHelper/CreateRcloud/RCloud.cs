@@ -29,6 +29,18 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "create")
                 {
+                    var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding");
+                    if (createResult == 0)
+                    {
+                        return createResult;
+                    }
+                    Console.WriteLine("Retrying to create Onboarding rCloud");
+                    var deleteResult = DeleteIfExists(name, owner);
+                    if (deleteResult == 1)
+                    {
+                        Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
+                        return deleteResult;
+                    }
                     return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding");
                 }
 
@@ -110,6 +122,7 @@ namespace CIHelper.CreateRcloud
 
                 s.Stop();
                 Console.WriteLine($"TIMEOUT EXPIRED. {name} WAS NOT SUCCESSFULLY CREATED.");
+
                 return 1;
             }
             return 1;
@@ -306,6 +319,20 @@ namespace CIHelper.CreateRcloud
         {
             string currentOnbBuildNumber;
             currentOnbBuildNumber = GetOnbBuildNumber("http://deploy/products/onboarding");
+            try
+            {
+                var lastBuild = File.ReadAllText(@"C:\\buildFile.txt");
+                if (lastBuild != currentOnbBuildNumber)
+                {
+                    Console.WriteLine("Last Build Ran Was Different then current, skipping waiting for Build.");
+                    File.WriteAllText(@"C:\\buildFile.txt", currentOnbBuildNumber);
+                    return 0;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Last Build File was not found.");
+            }
             if (currentOnbBuildNumber == "error")
             {
                 return 1;
@@ -313,13 +340,14 @@ namespace CIHelper.CreateRcloud
             Console.WriteLine("WAITING FOR New Onboarding BUILD: Current Build Number is : " + currentOnbBuildNumber);
             Stopwatch watchBuild = new Stopwatch();
             watchBuild.Start();
-            while (watchBuild.Elapsed < TimeSpan.FromSeconds(3000))
+            while (watchBuild.Elapsed < TimeSpan.FromSeconds(4500))
             {
                 Console.WriteLine("CHECKING IF New Onboarding Build Has Been Deployed..");
                 string newBuild = GetOnbBuildNumber("http://deploy/products/onboarding", currentOnbBuildNumber);
                 if (newBuild != currentOnbBuildNumber)
                 {
                     Console.WriteLine("New Onboarding Build " + newBuild + " has been completed.");
+                    File.WriteAllText(@"C:\\buildFile.txt", currentOnbBuildNumber);
                     return 0;
                 }
                 Console.WriteLine("NEW ONBOARDING BUILD HAS NOT BEEN CREATED YET, WAITING 1 MINUTE BEFORE RETRY.");
