@@ -21,23 +21,29 @@ namespace CIHelper
         public decimal duration { get; set; }
         public int buildNumber { get; set; }
 
+        public int countErrors { get; set; }
+
         public int reportStage()
         {
-            string stageErr = JsonConvert.SerializeObject(this.stageErrors);
-            var values = new Dictionary<string, string>
+            var values = new Dictionary<string, object>
             {
                 { "pipeline", this.pipeline },
                 { "stage", this.stage },
                 {"passed", this.passed.ToString() },
                 {"failed", this.failed.ToString() },
-                {"stageErrors", stageErr },
+                {"stageErrors", this.stageErrors },
                 {"duration", this.duration.ToString()},
-                {"buildNumber", this.buildNumber.ToString() }
+                {"buildNumber", this.buildNumber.ToString() },
+                {"machineName", this.machineName },
+                {"dateCompleted", DateTime.Now.ToString()}
             };
 
-            var content = new FormUrlEncodedContent(values);
+            string input = JsonConvert.SerializeObject(values);
 
-            var response = client.PostAsync("http://wxvdepdprgud077:8000/api/report", content);
+            //var content = new FormUrlEncodedContent(values);
+            var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
+
+            var response = client.PostAsync("http://wxvdepdprgud077:8000/api/report", stringContent);
 
             var responseString = response.Result.Content.ReadAsStringAsync().Result;
             Console.WriteLine(responseString);
@@ -57,6 +63,7 @@ namespace CIHelper
             this.machineName = machineName;
             string errorOutput = GetErrorOutput(textResult);
             int count = GetErrorCount(errorOutput);
+            this.countErrors = count;
             PopulateStageErrors(count, errorOutput);
             PopulatePassedAndFailed(textResult);
             this.reportStage();
