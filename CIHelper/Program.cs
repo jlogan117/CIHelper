@@ -64,7 +64,8 @@ namespace CIHelper
                     Console.WriteLine("Invalid parameter amount.");
                     return 1;
                 case "-reportapi":
-                    List<string> txtFileList = GetTextFiles(args);
+                    string textResult = ReadStageText(args[4], args);
+                    ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
                     return 0;
                 case "-getpassed":
                     List<SlackMessage> slackList = new List<SlackMessage>();
@@ -113,6 +114,17 @@ namespace CIHelper
             var resultFiles = Directory.GetFiles(string.Format(@"\\{0}\c$\{1}\{2}", args[1], args[2], args[3]));
             var resultTextFiles = resultFiles.Where(x => x.EndsWith(".txt")).AsEnumerable();
             return resultTextFiles.ToList();
+        }
+
+        private static string ReadStageText(string stage, string[] args)
+        {
+            string fileCopy = string.Format(@"\\{0}\c$\{1}\{2}\stage.txt", args[1], args[2], args[3]);
+            List<string> txtFileList = GetTextFiles(args);
+            var textFile = txtFileList.Where(x => x.Contains(stage)).ToList();
+            File.Copy(textFile[0], fileCopy);
+            var fileText =  File.ReadAllText(fileCopy);
+            File.Delete(fileCopy);
+            return fileText;
         }
     }
 }

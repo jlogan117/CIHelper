@@ -1,23 +1,132 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace CIHelper
 {
     public class ApiReporter
     {
         public string pipeline { get; set; }
+        
+        private static readonly HttpClient client = new HttpClient();
+        public string machineName { get; set; }
         public string stage { get; set; }
         public int passed { get; set; }
         public int failed { get; set; }
-        public List<string> stageErrors { get; set; }
-        public int duration { get; set; }
+        public List<string> stageErrors = new List<string>();
+        public decimal duration { get; set; }
         public int buildNumber { get; set; }
 
         public int reportStage()
         {
+            string stageErr = JsonConvert.SerializeObject(this.stageErrors);
+            var values = new Dictionary<string, string>
+            {
+                { "pipeline", this.pipeline },
+                { "stage", this.stage },
+                {"passed", this.passed.ToString() },
+                {"failed", this.failed.ToString() },
+                {"stageErrors", stageErr },
+                {"duration", this.duration.ToString()},
+                {"buildNumber", this.buildNumber.ToString() }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = client.PostAsync("http://wxvdepdprgud077:8000/api/report", content);
+
+            var responseString = response.Result.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(responseString);
+            Debug.Print(responseString);
+            if (responseString.Contains("success"))
+            {
+                return 0;
+            }
             return 1;
+        }
+
+        public ApiReporter(string textResult, string stage, string pipeline, int buildNumber, string machineName)
+        {
+            this.stage = stage;
+            this.pipeline = pipeline;
+            this.buildNumber = buildNumber;
+            this.machineName = machineName;
+            string errorOutput = GetErrorOutput(textResult);
+            int count = GetErrorCount(errorOutput);
+            PopulateStageErrors(count, errorOutput);
+            PopulatePassedAndFailed(textResult);
+            this.reportStage();
+        }
+
+        public void PopulatePassedAndFailed(string text)
+        {
+            int value = text.LastIndexOf("Passed");
+            var resultarray = text.Substring(value).Split(':');
+            this.passed = Convert.ToInt32(resultarray[1].Split(',')[0]);
+            this.failed = Convert.ToInt32(resultarray[2].Split(',')[0]);
+            var index = text.IndexOf("Duration:");
+            var durationList = text.Substring(index).Split(new string[] {"seconds"}, StringSplitOptions.None);
+            this.duration = Convert.ToDecimal(durationList[0].Split(':')[1].Trim());
+            //var index = path.LastIndexOf(@"\");
+            //var newText = path.Substring(index);
+            //var stage = newText.Replace(".txt", "").Replace(@"\", "");
+        }
+
+        public string GetErrorOutput(string text)
+        {
+            string errorOutput = "";
+            int failureIndex = text.IndexOf("Errors, Failures and Warnings");
+            if (failureIndex != -1)
+            {
+                errorOutput = text.Substring(failureIndex);
+            }
+            return errorOutput;
+        }
+
+        public int GetErrorCount(string errorOutput)
+        {
+            if (errorOutput == "")
+            {
+                return 0;
+            }
+            int initialIndex = 0;
+            int count = 0;
+            while (initialIndex != -1)
+            {
+                initialIndex = errorOutput.IndexOf("Error :", initialIndex + 1);
+                if (initialIndex != -1)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public void PopulateStageErrors(int count, string errorOutput)
+        {
+            int nextErrorIndex;
+            int runSettingsIndex;
+            int lastIndexFound = 0;
+            for (int i = 1; i <= count; i++)
+            {
+                var ErrorIndex = errorOutput.IndexOf("Error :", lastIndexFound + 1);
+                lastIndexFound = ErrorIndex;
+                if (i < count)
+                {
+                    nextErrorIndex = errorOutput.IndexOf("Error :", ErrorIndex + 1);
+                    stageErrors.Add(errorOutput.Substring(ErrorIndex, nextErrorIndex - ErrorIndex));
+                    stageErrors[stageErrors.Count - 1] = stageErrors[stageErrors.Count - 1].Replace(i + 1 + ")", "");
+                }
+                else
+                {
+                    runSettingsIndex = errorOutput.IndexOf("Run Settings");
+                    stageErrors.Add(errorOutput.Substring(ErrorIndex, runSettingsIndex - ErrorIndex));
+                }
+            }
         }
     }
 }
