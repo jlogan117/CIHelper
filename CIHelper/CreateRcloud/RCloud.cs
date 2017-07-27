@@ -56,7 +56,20 @@ namespace CIHelper.CreateRcloud
                 if (command.ToLower() == "create" && build == "latest")
                 {
                     //"env/{0}?owner={1}&email={2}&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true
+                    int upCreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true", timeout: 7200);
+                    if (upCreateValue == 0)
+                    {
+                        return upCreateValue;
+                    }
+                    Console.WriteLine("Error creating Ultipro RCloud on first try; retrying...");
+                    var deleteResult = DeleteIfExists(name, owner);
+                    if (deleteResult == 1)
+                    {
+                        Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
+                        return deleteResult;
+                    }
                     return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true", timeout: 7200);
+
                 }
                 if (command.ToLower() == "create" && build != "latest")
                 {

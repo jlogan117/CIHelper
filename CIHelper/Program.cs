@@ -67,6 +67,35 @@ namespace CIHelper
                     string textResult = ReadStageText(args[4], args);
                     ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
                     return 0;
+                case "-checkeverify":
+                    return EverifyChecker.CheckEverify();
+                case "-removebuilds":
+                    try
+                    {
+                        var buildDirectory =
+                            Directory.GetDirectories(string.Format(@"\\{0}\c$\{1}", args[1], args[2]))
+                                .OrderBy(x => x.ToString())
+                                .ToList();
+                        int buildDelete = Convert.ToInt32(args[3]) - 5;
+                        Console.WriteLine("Deleting build directories ending at build "+ buildDelete);
+                        for (int i = 0; i <= buildDirectory.Count - 1; i++)
+                        {
+                            if (buildDirectory[i].Contains(buildDelete.ToString()))
+                            {
+                                Directory.Delete(buildDirectory[i], true);
+                                break;
+                            }
+                            else
+                            {
+                                Directory.Delete(buildDirectory[i], true);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Unable to delete build directories " + ex.Message);
+                    }
+                    return 0;
                 case "-getpassed":
                     List<SlackMessage> slackList = new List<SlackMessage>();
                     List<string> fileList = GetTextFiles(args);

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartArguments>-reportapi devodw801 "Onboarding Core Pipeline" 70 AppConfigSettings</StartArguments>
+    <StartArguments>-removebuilds DEVODW711 "Ultipro V14 Pipeline"  18</StartArguments>
   </PropertyGroup>
 </Project>
