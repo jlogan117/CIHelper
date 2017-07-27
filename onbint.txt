@@ -9,6 +9,7 @@ stages {
 			script {
 				try {
 					slackSend channel: "#onbintegration", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW802 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud Build ONBCIInt onb"
 				}					
 				catch(error){
@@ -137,7 +138,6 @@ stages {
 					throw error
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 				}
 			}
@@ -157,8 +157,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\CodeSync.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\CodeSync.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} CodeSync"
 				}
 			}
 		}
@@ -177,8 +177,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\Supplemental.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\Supplemental.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} Supplemental"
 				}
 			}
 		}
@@ -197,8 +197,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FromRec.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FromRec.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} FromRec"
 				}
 			}
 		}
@@ -217,8 +217,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\UseStateOrFederalW4.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\UseStateOrFederalW4.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} UseStateOrFederalW4"
 				}
 			}
 		}
@@ -237,8 +237,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\WithStateTax.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\WithStateTax.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} WithStateTax"
 				}
 			}
 		}
@@ -249,7 +249,7 @@ stages {
 				try {
 				   def params = "C:\\CIHelper.exe -getpassed DEVODW802 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed DEVODW802 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
-				   work = work.substring(122).trim()
+				   work = work.substring(127).trim()
 				   notifyBuild("${currentBuild.result}", "${work}")
                 }
                 catch(error){

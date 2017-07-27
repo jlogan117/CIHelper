@@ -10,6 +10,7 @@ stages {
 			script {
 				try {
 					slackSend channel: "#upv14", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW711 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud delete Upfourt up denisewe"
 				}					
 				catch(error){
@@ -90,7 +91,6 @@ stages {
 					throw error
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 				}
 			}
@@ -110,8 +110,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14Grid.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14Grid.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14Grid"
 				}
 			}
 		}
@@ -130,8 +130,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaNewHire.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaNewHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14CanadaNewHire"
 				}
 			}
 		}
@@ -150,8 +150,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaRehire.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaRehire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14CanadaRehire"
 				}
 			}
 		}
@@ -170,8 +170,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaNewHire.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaNewHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14UsaNewHire"
 				}
 			}
 		}
@@ -190,8 +190,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaRehire.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaRehire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14UsaRehire"
 				}
 			}
 		}
@@ -210,8 +210,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14SupplementalData.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14SupplementalData.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14SupplementalData"
 				}
 			}
 		}
@@ -230,8 +230,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\GlobalHire.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\GlobalHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} GlobalHire"
 				}
 			}
 		}
@@ -242,7 +242,7 @@ stages {
 				try {
 				   def params = "C:\\CIHelper.exe -getpassed DEVODW711 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed DEVODW711 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
-				   work = work.substring(111).trim()
+				   work = work.substring(117).trim()
 				   notifyBuild("${currentBuild.result}", "${work}")
                 }
                 catch(error){

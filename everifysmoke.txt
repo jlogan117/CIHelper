@@ -10,6 +10,7 @@ stages {
 			script {
 				try {
 					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud delete EvSmoke onb marcosn"
 				}					
 				catch(error){
@@ -58,11 +59,11 @@ stages {
 		steps {
 			script {
 				try {
-					bat "echo Running on ${env.NODE_NAME}"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 EvSmoke"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+					//bat"net use \"\\\\EvSmokeoweb\\\$c\" /user:Administrator Passw0rd\"  "
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
@@ -101,11 +102,10 @@ stages {
 		steps {
 			script {
 				try {
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotURL https://stage.e-verify.uscis.gov/WcfWebService/EmployerWebServiceV29.svc"
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilot.SubmittersPhoneNbr 9543317000"
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotClientCompanyId 23036"
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotLogonId JSTA2903"
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotPswd Jul14@hit!"
+				    bat"C:\\CIHelper.exe -checkeverify"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotClientCompanyId 23032"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotLogonId JSTA2902"
+					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotPswd Jul13@hit!"
 					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.EVerify.Certification True"
 				}			
 				catch(error){
@@ -132,6 +132,7 @@ stages {
                 }
 				finally{
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerify"
 				}
 			}
 		}
@@ -142,7 +143,7 @@ stages {
 				try {
 				   def params = "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
-				   work = work.substring(111).trim()
+				   work = work.substring(125).trim()
 				   notifyBuild("${currentBuild.result}", "${work}")
                 }
                 catch(error){

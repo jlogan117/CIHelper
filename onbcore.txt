@@ -10,6 +10,7 @@ stages {
 			script {
 				try {
 				slackSend channel: "#onbcore", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW801 \n build number: ${env.BUILD_NUMBER}"
+				bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud Build ONBCITest onb"
 				}					
 				catch(error){
@@ -106,7 +107,6 @@ stages {
 					throw error
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 				}
 			}
@@ -126,8 +126,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} AppConfigSettings"
 				}
 			}
 		}
@@ -146,8 +146,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} FederalForms"
 				}
 			}
 		}
@@ -166,8 +166,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} PostHireVerifyStep"
 				}
 			}
 		}
@@ -186,8 +186,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} NewEmployeeStep"
 				}
 			}
 		}
@@ -206,8 +206,8 @@ stages {
 					return
                 }
 				finally{
-					bat"C:\\CIHelper.exe -results \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.txt\" "
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi DEVODW801 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} StatePanelChecks"
 				}
 			}
 		}
