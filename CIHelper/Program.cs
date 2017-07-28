@@ -67,6 +67,12 @@ namespace CIHelper
                     string textResult = ReadStageText(args[4], args);
                     ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
                     return 0;
+                case "-createstatus":
+                    ApiStatus apiStatus = new ApiStatus(args[1], args[2], args[3]);
+                    return apiStatus.createStatus();
+                case "-updatestatus":
+                    ApiStatus apiStatusUpdate = new ApiStatus(args[1], args[2], args[3]);
+                    return apiStatusUpdate.updateStatus();
                 case "-checkeverify":
                     return EverifyChecker.CheckEverify();
                 case "-removebuilds":
