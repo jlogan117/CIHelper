@@ -52,13 +52,14 @@ namespace CIHelper
             return 1;
         }
 
-        public int updateStatus()
+        public int updateStatus(string result)
         {
             var values = new Dictionary<string, object>
             {
                 { "pipeline", this.pipeline },
                 { "buildNumber", this.buildNumber},
                 {"dateCompleted", DateTime.Now.ToString() },
+                {"result",  result}
             };
 
             string input = JsonConvert.SerializeObject(values);

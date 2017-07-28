@@ -72,7 +72,7 @@ namespace CIHelper
                     return apiStatus.createStatus();
                 case "-updatestatus":
                     ApiStatus apiStatusUpdate = new ApiStatus(args[1], args[2], args[3]);
-                    return apiStatusUpdate.updateStatus();
+                    return apiStatusUpdate.updateStatus(args[4]);
                 case "-checkeverify":
                     return EverifyChecker.CheckEverify();
                 case "-removebuilds":

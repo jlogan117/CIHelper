@@ -33,3 +33,11 @@ C:\Projects\CIHelperGit\CIHelper\CIHelper\obj\x86\Debug\CIHelper.exe
 C:\Projects\CIHelperGit\CIHelper\CIHelper\obj\x86\Debug\CIHelper.pdb
 C:\Projects\CIHelperGit\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.dll
 C:\Projects\CIHelperGit\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.xml
+C:\CIHelper\CIHelper\bin\Debug\CIHelper.exe.config
+C:\CIHelper\CIHelper\obj\x86\Debug\CIHelper.exe
+C:\CIHelper\CIHelper\obj\x86\Debug\CIHelper.pdb
+C:\CIHelper\CIHelper\bin\Debug\CIHelper.exe
+C:\CIHelper\CIHelper\bin\Debug\CIHelper.pdb
+C:\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.dll
+C:\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.xml
+C:\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
