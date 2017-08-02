@@ -334,16 +334,18 @@ namespace CIHelper.CreateRcloud
             currentOnbBuildNumber = GetOnbBuildNumber("http://deploy/products/onboarding");
             try
             {
-                var lastBuild = File.ReadAllText(@"C:\\buildFile.txt");
+                var lastBuild = File.ReadAllText(@"C:\\builds\buildFile.txt");
+                Console.WriteLine("Last Build Number is: " + lastBuild);
                 if (lastBuild != currentOnbBuildNumber)
                 {
                     Console.WriteLine("Last Build Ran Was Different then current, skipping waiting for Build.");
-                    File.WriteAllText(@"C:\\buildFile.txt", currentOnbBuildNumber);
+                    File.WriteAllText(@"C:\\builds\buildFile.txt", currentOnbBuildNumber);
                     return 0;
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Console.WriteLine("Last Build File was not found.");
             }
             if (currentOnbBuildNumber == "error")
