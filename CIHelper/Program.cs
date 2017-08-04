@@ -84,14 +84,11 @@ namespace CIHelper
                                 .ToList();
                         int buildDelete = Convert.ToInt32(args[3]) - 5;
                         Console.WriteLine("Deleting build directories ending at build "+ buildDelete);
-                        for (int i = 0; i <= buildDirectory.Count - 1; i++)
+                        for (int i = 0; i <= buildDirectory.Count; i++)
                         {
-                            if (buildDirectory[i].Contains(buildDelete.ToString()))
-                            {
-                                Directory.Delete(buildDirectory[i], true);
-                                break;
-                            }
-                            else
+                            int index = buildDirectory[i].LastIndexOf(@"\");
+                            int value = Convert.ToInt32(buildDirectory[i].Substring(index + 1));
+                            if(value <= buildDelete)
                             {
                                 Directory.Delete(buildDirectory[i], true);
                             }
@@ -119,8 +116,9 @@ namespace CIHelper
                             var stage = newText.Replace(".txt", "").Replace(@"\", "");
                             slackList.Add(new SlackMessage(stage, passedValue, failedValue));
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            Console.WriteLine(ex.Message);
                             slackList.Add(new SlackMessage("ERROR READING STAGE", "0", "0"));
                         }
                     }
