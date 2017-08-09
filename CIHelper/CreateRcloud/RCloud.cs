@@ -27,9 +27,11 @@ namespace CIHelper.CreateRcloud
                 {
                     return DeleteIfExists(name, owner);
                 }
+                //RC_osname = win2008r2
                 if (command.ToLower() == "create")
                 {
-                    var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding");
+                    Console.WriteLine($@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
+                    var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
                     if (createResult == 0)
                     {
                         return createResult;
@@ -41,7 +43,7 @@ namespace CIHelper.CreateRcloud
                         Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
                         return deleteResult;
                     }
-                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding");
+                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&RC_osname=win2008r2");
                 }
 
                 Console.WriteLine("INVALID PARAMETER HAS BEEN PASSED TO THE EXECUTABLE");
