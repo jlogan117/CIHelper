@@ -153,7 +153,7 @@ namespace CIHelper
         {
             string fileCopy = string.Format(@"\\{0}\c$\{1}\{2}\stage.txt", args[1], args[2], args[3]);
             List<string> txtFileList = GetTextFiles(args);
-            var textFile = txtFileList.Where(x => x.Contains(stage)).ToList();
+            var textFile = txtFileList.Where(x => x.Contains(stage + ".txt")).ToList();
             File.Copy(textFile[0], fileCopy);
             var fileText =  File.ReadAllText(fileCopy);
             File.Delete(fileCopy);
