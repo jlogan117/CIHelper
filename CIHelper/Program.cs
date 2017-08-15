@@ -22,6 +22,8 @@ namespace CIHelper
             {
                 case "-setappconfig":
                     return AppConfig.UpdateAppConfigValue(args[1], args[2], args[3]);
+                case "-setonbrd":
+                    return AppConfig.UpdateMasterConfig(args[1], args[2], args[3]);
                 //case "-uod":
                 //    return UOD.RequestUOD(args[1]);
                 //case "-uodlog":
