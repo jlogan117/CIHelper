@@ -9,6 +9,8 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 6"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 1"
 				    bat"C:\\CIHelper.exe -checkeverify"
 					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
@@ -16,6 +18,7 @@ stages {
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
                     def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Configure Echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -28,6 +31,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyAutomatic\" 2"
 					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
@@ -49,6 +53,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyDhs\" 3"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifyDhs\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDhs.txt\" "
@@ -69,6 +74,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyDuplicateAndResolveCase\" 4"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifyDuplicateAndResolveCase\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDuplicateAndResolveCase.txt\" "
@@ -89,6 +95,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySsa\" 5"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifySsa\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySsa.txt\" "
@@ -109,6 +116,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySubmitInitial\" 6"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifySubmiteIntial\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySubmiteIntial.txt\" "
@@ -128,6 +136,10 @@ stages {
 		steps {
 			script {
 				try {
+				    if ("${currentBuild.result}" == "null") {
+			            currentBuild.result = "SUCCESS"
+                     }
+				    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 				   def params = "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
 				   work = work.substring(132).trim()
@@ -145,7 +157,7 @@ stages {
 }
 }
 def notifyBuild(String buildStatus = 'SUCCESS', String work) {
-	    if (buildStatus == "null") {
+	    if (buildStatus == "null" || buildStatus == "SUCCESS") {
             color = 'GREEN'
             colorCode = '#00FF00'
 			buildStatus = "SUCCESS"

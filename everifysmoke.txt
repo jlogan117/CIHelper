@@ -9,12 +9,15 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 7"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting Onb RCloudt\" 1"
 					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud delete EvSmoke onb marcosn"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#everify", color: '#FF0000', message: "FAILED To delete onboarding RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -27,10 +30,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb RCloud\" 2"
 					bat"C:\\CIHelper.exe -rcloud create EvSmoke onb marcosn"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#everify", color: '#FF0000', message: "FAILED To create onboarding RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -43,10 +48,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 3"
 					bat"C:\\SvnUpdateEcho.bat"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#everify", color: '#FF0000', message: "FAILED To update svn \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -59,6 +66,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 4"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 EvSmoke"
@@ -67,6 +75,7 @@ stages {
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#everify", color: '#FF0000', message: "FAILED To configure echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -83,10 +92,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Account\" 5"
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 				}			
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#everify", color: '#FF0000', message: "FAILED To create onboarding account \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -102,14 +113,16 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Setting Everify Credentials\" 6"
 				    bat"C:\\CIHelper.exe -checkeverify"
 					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotClientCompanyId 23032"
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotLogonId JSTA2902"
-					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.BasicPilotPswd Jul13@hit!"
+					bat"C:\\CIHelper.exe -setonbrd evsmoke Onboarding.EVerifyUsername JSTA2902"
+					bat"C:\\CIHelper.exe -setonbrd evsmoke Onboarding.EVerifyPassword Jul13@hit!"
 					bat"C:\\CIHelper.exe -setappconfig evsmoke XpressHR.EVerify.Certification True"
 				}			
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://${env.NODE_NAME}/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#everify", color: '#FF0000', message: "FAILED To set everify credentials\n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -122,6 +135,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Smoke Tests\" 7"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerify\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerify.txt\" "
@@ -141,6 +155,10 @@ stages {
 		steps {
 			script {
 				try {
+				    if ("${currentBuild.result}" == "null") {
+			            currentBuild.result = "SUCCESS"
+                     }
+				    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 				   def params = "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
 				   work = work.substring(125).trim()
@@ -159,7 +177,7 @@ stages {
 }
 }
 def notifyBuild(String buildStatus = 'SUCCESS', String work) {
-	    if (buildStatus == "null") {
+	    if (buildStatus == "null" || buildStatus == "SUCCESS") {
             color = 'GREEN'
             colorCode = '#00FF00'
 			buildStatus = "SUCCESS"

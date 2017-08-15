@@ -71,10 +71,13 @@ namespace CIHelper
                     return 0;
                 case "-createstatus":
                     ApiStatus apiStatus = new ApiStatus(args[1], args[2], args[3]);
-                    return apiStatus.createStatus();
+                    return apiStatus.createStatus(args[4]);
                 case "-updatestatus":
                     ApiStatus apiStatusUpdate = new ApiStatus(args[1], args[2], args[3]);
                     return apiStatusUpdate.updateStatus(args[4]);
+                case "-updatestatusstage":
+                    ApiStatus apiStatusUpdateStage = new ApiStatus(args[1], args[2], args[3]);
+                    return apiStatusUpdateStage.updateStatusWithCurrentStage(args[4], args[5]);
                 case "-checkeverify":
                     return EverifyChecker.CheckEverify();
                 case "-removebuilds":

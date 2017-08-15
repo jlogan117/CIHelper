@@ -9,11 +9,14 @@ stages {
 			script {
 				try {
 					slackSend channel: "#onbintegration", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW802 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 13"
+					bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Building Onboarding\" 1"
 					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud Build ONBCIInt onb"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Build Onboarding RC Branch \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -26,10 +29,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting Onboarding RCloud\" 2"
 					bat"C:\\CIHelper.exe -rcloud delete ONBCIInt onb"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
 					slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Delete Onboarding RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -41,10 +46,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting UP RCloud\" 3"
 					bat"C:\\CIHelper.exe -rcloud delete UpInt up Denisewe"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
 					slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Delete UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -57,10 +64,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating UP RCloud\" 4"
 					bat"C:\\CIHelper.exe -rcloud create UpInt up DeniseWe"
 				}					
 				catch(error){
                    currentBuild.result = 'FAILURE'
+                   bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 				   def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
 					slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Create UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -73,10 +82,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb RCloud\" 5"
 					bat"C:\\CIHelper.exe -rcloud create ONBCIInt onb"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
 					slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Create Onboarding RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -90,10 +101,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 6"
 					bat"C:\\SvnUpdateEcho.bat"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
 					slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Update SVN \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -106,6 +119,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 7"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
 					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat UpInt 138 ONBCIInt"
@@ -113,6 +127,7 @@ stages {
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Configure Echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -129,10 +144,12 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Account\" 8"
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Integration.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 				}			
 				catch(error){
                     currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 					def urlnba = "file://DEVODW802/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
                     slackSend channel: "#onbintegration", color: '#FF0000', message: "FAILED To Build Create Onboarding Account \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
@@ -148,6 +165,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Code Sync\" 9"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw802 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Integration.dll\" --where \"cat == CodeSync\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\CodeSync.txt\" "
@@ -168,6 +186,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Supplemental\" 10"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw802 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Integration.dll\" --where \"cat == Supplemental\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\Supplemental.txt\" "
@@ -188,6 +207,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"FromRec\" 11"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw802 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Integration.dll\" --where \"cat == FromRec\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FromRec.txt\" "
@@ -208,6 +228,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"UseStateOrFederalW4\" 12"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw802 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Integration.dll\" --where \"cat == UseStateOrFederalW4\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\UseStateOrFederalW4.txt\" "
@@ -228,6 +249,7 @@ stages {
 		steps {
 			script {
 				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"WithStateTax\" 13"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\devodw802 -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Integration.dll\" --where \"cat == WithStateTax\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\WithStateTax.txt\" "
@@ -247,6 +269,10 @@ stages {
 		steps {
 			script {
 				try {
+				    if ("${currentBuild.result}" == "null") {
+			            currentBuild.result = "SUCCESS"
+                     }
+				   bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
 				   def params = "C:\\CIHelper.exe -getpassed DEVODW802 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed DEVODW802 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
 				   work = work.substring(127).trim()
@@ -265,7 +291,7 @@ stages {
 }
 }
 def notifyBuild(String buildStatus = 'SUCCESS', String work) {
-	    if (buildStatus == "null") {
+	    if (buildStatus == "null" || buildStatus == "SUCCESS") {
             color = 'GREEN'
             colorCode = '#00FF00'
 			buildStatus = "SUCCESS"
