@@ -104,7 +104,20 @@ namespace CIHelper
             int count = 0;
             while (initialIndex != -1)
             {
-                initialIndex = errorOutput.IndexOf("Error :", initialIndex + 1);
+                int errorIndex = errorOutput.IndexOf("Error :", initialIndex + 1);
+                int failureIndex = errorOutput.IndexOf("Failed :", initialIndex + 1);
+                if(failureIndex != -1 && errorIndex != -1 && failureIndex < errorIndex)
+                {
+                    initialIndex = failureIndex;
+                }
+                if(failureIndex != -1 && errorIndex == -1)
+                {
+                    initialIndex = failureIndex;
+                }
+                else
+                {
+                    initialIndex = errorIndex;
+                }
                 if (initialIndex != -1)
                 {
                     count++;
@@ -118,13 +131,29 @@ namespace CIHelper
             int nextErrorIndex;
             int runSettingsIndex;
             int lastIndexFound = 0;
+            var listString = new List<string>();
+            listString.Add("Error :");
+            listString.Add("Failed :");
+            int listStringIndex;
             for (int i = 1; i <= count; i++)
             {
+                listStringIndex = 0;
                 var ErrorIndex = errorOutput.IndexOf("Error :", lastIndexFound + 1);
+                var FailureIndex = errorOutput.IndexOf("Failed :", lastIndexFound + 1);
+                if(FailureIndex > -1 && ErrorIndex > -1 && FailureIndex < ErrorIndex)
+                {
+                    ErrorIndex = FailureIndex;
+                    listStringIndex = 1;
+                }
+                if(FailureIndex > -1 && ErrorIndex == -1)
+                {
+                    ErrorIndex = FailureIndex;
+                    listStringIndex = 1;
+                }
                 lastIndexFound = ErrorIndex;
                 if (i < count)
                 {
-                    nextErrorIndex = errorOutput.IndexOf("Error :", ErrorIndex + 1);
+                    nextErrorIndex = errorOutput.IndexOf(listString[listStringIndex], ErrorIndex + 1);
                     stageErrors.Add(errorOutput.Substring(ErrorIndex, nextErrorIndex - ErrorIndex));
                     stageErrors[stageErrors.Count - 1] = stageErrors[stageErrors.Count - 1].Replace(i + 1 + ")", "");
                 }
