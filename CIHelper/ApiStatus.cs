@@ -27,13 +27,30 @@ namespace CIHelper
 
         public int createStatus(string stageTotal)
         {
+            var upbuild = "";
+            var obbuild = "";
+            if (this.pipeline.ToLower().Contains("ultipro") || this.pipeline.ToLower().Contains("integration"))
+            {
+                //get latest ultipro build
+                var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
+                upbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
+                upbuild = upbuild.Substring(17).Split('"')[0];
+            }
+            if (this.pipeline.ToLower().Contains("onboarding"))
+            {
+                var obBuildResponse = client.GetAsync("http://deploy/products/onboarding");
+                obbuild = obBuildResponse.Result.Content.ReadAsStringAsync().Result;
+                obbuild = obbuild.Substring(17).Split('"')[0];
+            }
             var values = new Dictionary<string, object>
             {
                 { "pipeline", this.pipeline },
                 { "buildNumber", this.buildNumber},
                 { "machineName", this.machineName },
                 {"dateStarted", DateTime.Now.ToString() },
-                {"stageTotal",  stageTotal}
+                {"stageTotal",  stageTotal},
+                {"upBuildNumber", upbuild },
+                {"onbBuildNumber", obbuild }
             };
 
             string input = JsonConvert.SerializeObject(values);

@@ -66,12 +66,28 @@ namespace CIHelper
                     Console.WriteLine("Invalid parameter amount.");
                     return 1;
                 case "-reportapi":
-                    string textResult = ReadStageText(args[4], args);
-                    ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
-                    return 0;
+                    try
+                    {
+                        string textResult = ReadStageText(args[4], args);
+                        ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
+                        return 0;
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("Error has occurred " + ex.Message);
+                        return 1;
+                    }
                 case "-createstatus":
-                    ApiStatus apiStatus = new ApiStatus(args[1], args[2], args[3]);
-                    return apiStatus.createStatus(args[4]);
+                    try
+                    {
+                        ApiStatus apiStatus = new ApiStatus(args[1], args[2], args[3]);
+                        return apiStatus.createStatus(args[4]);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("Error has occurred " + ex.Message);
+                        return 1;
+                    }
                 case "-updatestatus":
                     ApiStatus apiStatusUpdate = new ApiStatus(args[1], args[2], args[3]);
                     return apiStatusUpdate.updateStatus(args[4]);
