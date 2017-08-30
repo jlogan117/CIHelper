@@ -154,6 +154,17 @@ namespace CIHelper
                 if (i < count)
                 {
                     nextErrorIndex = errorOutput.IndexOf(listString[listStringIndex], ErrorIndex + 1);
+                    if(nextErrorIndex < ErrorIndex)
+                    {
+                        if (listStringIndex == 0)
+                        {
+                            nextErrorIndex = errorOutput.IndexOf(listString[1], ErrorIndex + 1);
+                        }
+                        else
+                        {
+                            nextErrorIndex = errorOutput.IndexOf(listString[0], ErrorIndex + 1);
+                        }
+                    }                   
                     stageErrors.Add(errorOutput.Substring(ErrorIndex, nextErrorIndex - ErrorIndex));
                     stageErrors[stageErrors.Count - 1] = stageErrors[stageErrors.Count - 1].Replace(i + 1 + ")", "");
                 }
