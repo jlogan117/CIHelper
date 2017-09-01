@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartArguments>-reportapi DEVODW709 "Onboarding EVerify Full Test Suite" 14 EVerifySsa</StartArguments>
+    <StartArguments>-reportapi DEVODW710 "Ultipro V10 Pipeline" 158 V10OnbService</StartArguments>
   </PropertyGroup>
 </Project>

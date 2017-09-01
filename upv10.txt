@@ -7,6 +7,7 @@ stages {
     
 	stage('Deleting Existing RCloud') {
 		steps {
+		    timeout(3){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 10"
@@ -23,11 +24,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('Create Ultipro RCloud') {
 		steps {
+		    timeout(130){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating UltiPro RCloud\" 2"
@@ -41,11 +44,13 @@ stages {
 					throw error
                }
 			}
+		    }
 		}
 	}
 	
 	stage('SVN Update') {
 		steps {
+		    timeout(30){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 3"
@@ -59,11 +64,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('Configure Echo') {
 		steps {
+		    timeout(10){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 4"
@@ -84,11 +91,13 @@ stages {
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
 				}
 			}
+		    }
 		}
 	}
 	
 	stage('Environment Setup') {
 		steps {
+		    timeout(10){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Environment Setup\" 5"
@@ -105,11 +114,13 @@ stages {
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 				}
 			}
+		    }
 		}
 	}
         
 	stage('Run V10Grid Tests') {
 		steps {
+		    timeout(70){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10Grid\" 6"
@@ -126,11 +137,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10Grid"
 				}
 			}
+		    }
 		}
 	}
         
 	stage('Run V10CanadaNewHireAndRehire Tests') {
 		steps {
+		    timeout(60){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10CanadaNewHireAndRehire\" 7"
@@ -147,11 +160,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10CanadaNewHireAndRehire"
 				}
 			}
+		    }
 		}
 	}
 		
 	stage('Run V10UsaNewHire Tests') {
 		steps {
+		    timeout(330){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10UsaNewHire\" 8"
@@ -168,11 +183,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10UsaNewHire"
 				}
 			}
+		    }
 		}
 	}
 		
 	stage('Run V10UsaRehire Tests') {
 		steps {
+		    timeout(200){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10UsaRehire\" 9"
@@ -189,11 +206,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10UsaRehire"
 				}
 			}
+		    }
 		}
 	}
 		
 	stage('Run V10OnbService Tests') {
 		steps {
+		    timeout(480){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10OnbService\" 10"
@@ -210,11 +229,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10OnbService"
 				}
 			}
+		    }
 		}
     }
 	
 	stage('Slack Notification') {
 		steps {
+		    timeout(1){
 			script {
 				try {
 				     if ("${currentBuild.result}" == "null") {
@@ -233,6 +254,7 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
     }
         

@@ -7,6 +7,7 @@ stages {
     
 	stage('Building Onboarding') {
 		steps {
+		    timeout(120){
 			script {
 				try {
 				slackSend channel: "#onbcore", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On ${env.NODE_NAME} \n build number: ${env.BUILD_NUMBER}"
@@ -23,11 +24,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 
 	stage('Deleting Existing RCloud') {
 		steps {
+		    timeout(3){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting Onb RCLoud\" 2"
@@ -41,11 +44,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('Create Onb RCloud') {
 		steps {
+		    timeout(60){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Rcloud\" 3"
@@ -59,11 +64,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('SVN Update') {
 		steps {
+		    timeout(5){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 4"
@@ -77,11 +84,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('Configure Echo') {
 		steps {
+		    timeout(10){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 5"
@@ -102,11 +111,13 @@ stages {
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
 				}
 			}
+		    }
 		}
 	}
 	
 	stage('Create Onboarding Account SB122') {
 		steps {
+		    timeout(5){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Account\" 6"
@@ -121,13 +132,16 @@ stages {
                 }
 				finally{
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EnvSetup"
 				}
 			}
+		    }
 		}
 	}
         
 	stage('Run AppConfigSettings Tests') {
 		steps {
+		    timeout(30){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"AppConfigSettings\" 7"
@@ -144,11 +158,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} AppConfigSettings"
 				}
 			}
+		    }
 		}
 	}
         
 	stage('Run FederalForms Tests') {
 		steps {
+		    timeout(300){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Federal Forms\" 8"
@@ -165,11 +181,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} FederalForms"
 				}
 			}
+		    }
 		}
 	}
 		
 	stage('Run PostHireVerifyStep Tests') {
 		steps {
+		    timeout(360){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"PostHireVerification Step\" 9"
@@ -186,11 +204,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} PostHireVerifyStep"
 				}
 			}
+		    }
 		}
 	}
 		
 	stage('Run NewEmployeeStep Tests') {
 		steps {
+		    timeout(300){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"NewEmployeeStep\" 10"
@@ -207,11 +227,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} NewEmployeeStep"
 				}
 			}
+		    }
 		}
 	}
 		
 	stage('Run StatePanelChecks Tests') {
 		steps {
+		    timeout(270){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"StatePanelChecks\" 11"
@@ -228,10 +250,12 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} StatePanelChecks"
 				}
 			}
+		    }
 		}
     }
     	stage('Slack Notification') {
 		steps {
+		    timeout(1){
 			script {
 				try {
 				    if ("${currentBuild.result}" == "null") {
@@ -250,6 +274,7 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
     }
 	

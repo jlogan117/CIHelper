@@ -7,6 +7,7 @@ stages {
     
     stage('Configure Echo') {
 		steps {
+		    timeout(1){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 6"
@@ -24,11 +25,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
     
 	stage('Run EVerifyAutomatic Tests') {
 		steps {
+		    timeout(360){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyAutomatic\" 2"
@@ -46,11 +49,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifyAutomatic"
 				}
 			}
+		    }
 		}
 	}
 	
 	stage('Run EVerifyDhs Tests') {
 		steps {
+		    timeout(360){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyDhs\" 3"
@@ -67,11 +72,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifyDhs"
 				}
 			}
+		    }
 		}
 	}
 	
 	stage('Run EVerifyDuplicateAndResolveCase Tests') {
 		steps {
+		    timeout(200){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyDuplicateAndResolveCase\" 4"
@@ -88,11 +95,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifyDuplicateAndResolveCase"
 				}
 			}
+		    }
 		}
 	}
 
 	stage('Run EVerifySsa Tests') {
 		steps {
+		    timeout(630){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySsa\" 5"
@@ -109,11 +118,13 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifySsa"
 				}
 			}
+		    }
 		}
 	}
 
 	stage('Run EVerifySubmitInitial Tests') {
 		steps {
+		    timeout(150){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySubmitInitial\" 6"
@@ -130,10 +141,12 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifySubmiteIntial"
 				}
 			}
+		    }
 		}
 	}
 	stage('Slack Notification') {
 		steps {
+		    timeout(1){
 			script {
 				try {
 				    if ("${currentBuild.result}" == "null") {
@@ -152,6 +165,7 @@ stages {
 					throw error
                 }
 			}
+		}
 		}
     }	
 }

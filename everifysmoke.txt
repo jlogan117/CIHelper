@@ -7,10 +7,11 @@ stages {
     
 	stage('Deleting Existing RCloud') {
 		steps {
+		    timeout(3){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 7"
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting Onb RCloudt\" 1"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting Onb RCloud\" 1"
 					slackSend channel: "#everify", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW709 \n build number: ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud delete EvSmoke onb marcosn"
@@ -23,11 +24,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('Create Onb RCloud') {
 		steps {
+		    timeout(60){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb RCloud\" 2"
@@ -41,11 +44,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('SVN Update') {
 		steps {
+		    timeout(10){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 3"
@@ -59,11 +64,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
 	
 	stage('Configure Echo') {
 		steps {
+		    timeout(10){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 4"
@@ -85,11 +92,13 @@ stages {
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
 				}
 			}
+		    }
 		}
 	}
 
 	stage('Create Onboarding Account SB122') {
 		steps {
+		    timeout(10){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Account\" 5"
@@ -104,13 +113,16 @@ stages {
                 }
 				finally{
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EnvSetup"
 				}
 			}
+		    }
 		}
 	}
 	
 	stage('Set EVerify Credentials') {
 		steps {
+		    timeout(2){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Setting Everify Credentials\" 6"
@@ -128,11 +140,13 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
 	}
         
 	stage('Run EVerify Smoke Tests') {
 		steps {
+		    timeout(200){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Smoke Tests\" 7"
@@ -149,10 +163,12 @@ stages {
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerify"
 				}
 			}
+		    }
 		}
 	}
 	stage('Slack Notification') {
 		steps {
+		    timeout(1){
 			script {
 				try {
 				    if ("${currentBuild.result}" == "null") {
@@ -171,6 +187,7 @@ stages {
 					throw error
                 }
 			}
+		    }
 		}
     }
 	
