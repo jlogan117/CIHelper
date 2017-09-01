@@ -104,7 +104,8 @@ namespace CIHelper
                 { "pipeline", this.pipeline },
                 { "buildNumber", this.buildNumber},
                 {"currentStage", currentStage},
-                {"currentStageNumber", stageNumber }
+                {"currentStageNumber", stageNumber },
+                {"currentStageStarted", DateTime.Now.ToString() }
             };
 
             string input = JsonConvert.SerializeObject(values);
