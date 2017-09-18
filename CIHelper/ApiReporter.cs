@@ -23,9 +23,11 @@ namespace CIHelper
 
         public int countErrors { get; set; }
 
-        public int reportStage()
+        public int reportStage(int lastDuration)
         {
-            var values = new Dictionary<string, object>
+            if(lastDuration == 0)
+            {
+                var values = new Dictionary<string, object>
             {
                 { "pipeline", this.pipeline },
                 { "stage", this.stage },
@@ -38,24 +40,58 @@ namespace CIHelper
                 {"dateCompleted", DateTime.Now.ToString()}
             };
 
-            string input = JsonConvert.SerializeObject(values);
+                string input = JsonConvert.SerializeObject(values);
 
-            //var content = new FormUrlEncodedContent(values);
-            var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
+                //var content = new FormUrlEncodedContent(values);
+                var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
 
-            var response = client.PostAsync("http://wxvdepdprgud077:8000/api/report", stringContent);
+                var response = client.PostAsync("http://wxvdepdprgud077:8000/api/report", stringContent);
 
-            var responseString = response.Result.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(responseString);
-            Debug.Print(responseString);
-            if (responseString.Contains("success"))
-            {
-                return 0;
+                var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                Console.WriteLine(responseString);
+                Debug.Print(responseString);
+                if (responseString.Contains("success"))
+                {
+                    return 0;
+                }
+                return 1;
             }
-            return 1;
+            else
+            {
+                this.duration = lastDuration;
+                var values = new Dictionary<string, object>
+            {
+                { "pipeline", this.pipeline },
+                { "stage", this.stage },
+                {"passed", this.passed.ToString() },
+                {"failed", this.failed.ToString() },
+                {"stageErrors", this.stageErrors },
+                {"duration", this.duration.ToString()},
+                {"buildNumber", this.buildNumber.ToString() },
+                {"machineName", this.machineName },
+                {"dateCompleted", DateTime.Now.ToString()},
+            };
+
+                string input = JsonConvert.SerializeObject(values);
+
+                //var content = new FormUrlEncodedContent(values);
+                var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
+
+                var response = client.PostAsync("http://wxvdepdprgud077:8000/api/report", stringContent);
+
+                var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                Console.WriteLine(responseString);
+                Debug.Print(responseString);
+                if (responseString.Contains("success"))
+                {
+                    return 0;
+                }
+                return 1;
+            }
+            
         }
 
-        public ApiReporter(string textResult, string stage, string pipeline, int buildNumber, string machineName)
+        public ApiReporter(string textResult, string stage, string pipeline, int buildNumber, string machineName, int lastDuration = 0)
         {
             this.stage = stage;
             this.pipeline = pipeline;
@@ -66,18 +102,26 @@ namespace CIHelper
             this.countErrors = count;
             PopulateStageErrors(count, errorOutput);
             PopulatePassedAndFailed(textResult);
-            this.reportStage();
+            this.reportStage(lastDuration);
         }
 
         public void PopulatePassedAndFailed(string text)
         {
-            int value = text.LastIndexOf("Passed");
-            var resultarray = text.Substring(value).Split(':');
-            this.passed = Convert.ToInt32(resultarray[1].Split(',')[0]);
-            this.failed = Convert.ToInt32(resultarray[2].Split(',')[0]);
-            var index = text.IndexOf("Duration:");
-            var durationList = text.Substring(index).Split(new string[] {"seconds"}, StringSplitOptions.None);
-            this.duration = Convert.ToDecimal(durationList[0].Split(':')[1].Trim());
+            if (text == "")
+            {
+                this.passed = 0;
+                this.failed = 0;
+            }
+            else
+            {
+                int value = text.LastIndexOf("Passed");
+                var resultarray = text.Substring(value).Split(':');
+                this.passed = Convert.ToInt32(resultarray[1].Split(',')[0]);
+                this.failed = Convert.ToInt32(resultarray[2].Split(',')[0]);
+                var index = text.IndexOf("Duration:");
+                var durationList = text.Substring(index).Split(new string[] { "seconds" }, StringSplitOptions.None);
+                this.duration = Convert.ToDecimal(durationList[0].Split(':')[1].Trim());
+            }
             //var index = path.LastIndexOf(@"\");
             //var newText = path.Substring(index);
             //var stage = newText.Replace(".txt", "").Replace(@"\", "");

@@ -99,13 +99,26 @@ namespace CIHelper
 
         public int updateStatusWithCurrentStage(string currentStage, string stageNumber)
         {
+            //http://wxvdepdprgud077:8000/api/laststageduration?pipeline=Onboarding Core Pipeline&stage=FederalForms
+            var apiEndPoint = "http://wxvdepdprgud077:8000/api/laststageduration?pipeline=" + this.pipeline +"&stage=" + currentStage;
+            var lastDurationResponse = client.GetAsync(apiEndPoint);
+            var lastDuration = lastDurationResponse.Result.Content.ReadAsStringAsync().Result;
+            if (!lastDuration.Contains("500"))
+            {
+                lastDuration = lastDuration.Split(':')[4].Split('}')[0].Replace("\"", "");
+            }
+            else
+            {
+                lastDuration = "0";
+            }
             var values = new Dictionary<string, object>
             {
                 { "pipeline", this.pipeline },
                 { "buildNumber", this.buildNumber},
                 {"currentStage", currentStage},
                 {"currentStageNumber", stageNumber },
-                {"currentStageStarted", DateTime.Now.ToString() }
+                {"currentStageStarted", DateTime.Now.ToString() },
+                {"currentStageLastDuration", lastDuration }
             };
 
             string input = JsonConvert.SerializeObject(values);

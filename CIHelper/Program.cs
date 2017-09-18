@@ -68,9 +68,17 @@ namespace CIHelper
                 case "-reportapi":
                     try
                     {
-                        string textResult = ReadStageText(args[4], args);
-                        ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
-                        return 0;
+                        if (args.Length == 6)
+                        {
+                            ApiReporter api = new ApiReporter("", args[4], args[2], Convert.ToInt32(args[3]), args[1], Convert.ToInt32(args[5]));
+                            return 0;
+                        }
+                        else
+                        {
+                            string textResult = ReadStageText(args[4], args);
+                            ApiReporter api = new ApiReporter(textResult, args[4], args[2], Convert.ToInt32(args[3]), args[1]);
+                            return 0;
+                        }
                     }
                     catch(Exception ex)
                     {
