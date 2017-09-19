@@ -11,7 +11,7 @@ stages {
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 10"
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting UltiPro RCloud\" 1"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"DeleteUpCloud\" 1"
 					slackSend channel: "#upv10", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW710 \n build number: ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud delete Upten up DmitryK"
@@ -23,6 +23,9 @@ stages {
                     slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To delete UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} DeleteUpCloud 120"
+				}
 			}
 		    }
 		}
@@ -33,7 +36,7 @@ stages {
 		    timeout(130){
 			script {
 				try {
-				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating UltiPro RCloud\" 2"
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"CreateUpCloud\" 2"
 					bat"C:\\CIHelper.exe -rcloud create Upten up DmitryK"
 				}					
 				catch(error){
@@ -43,6 +46,9 @@ stages {
                     slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Create UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                }
+               finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} CreateUpCloud 6000"
+				}
 			}
 		    }
 		}
@@ -53,7 +59,7 @@ stages {
 		    timeout(30){
 			script {
 				try {
-				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 3"
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"SvnUpdate\" 3"
 					bat"C:\\SvnUpdateEcho.bat"
 				}					
 				catch(error){
@@ -63,6 +69,9 @@ stages {
                     slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Update SVN \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} SvnUpdate 600"
+				}
 			}
 		    }
 		}
@@ -73,11 +82,11 @@ stages {
 		    timeout(10){
 			script {
 				try {
-				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 4"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat Upten 138 Upten"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+				    bat "C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ConfigureEcho\" 4"
+					bat "C:\\CIHelper.exe -ChangeEnvironment \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.Automation.OnDemand.UltiPro\\App.config\" HIT-CLOUDCLOUD"
+					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" true"
+					bat "C:\\CIHelper.exe -changeenvironmentxml Upten 138 Upten"
+					bat "C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
@@ -89,6 +98,7 @@ stages {
 				finally{
 					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
+				    bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ConfigureEcho 150"
 				}
 			}
 		    }
@@ -100,7 +110,7 @@ stages {
 		    timeout(10){
 			script {
 				try {
-				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Environment Setup\" 5"
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EnvSetup\" 5"
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 				}			
 				catch(error){
@@ -112,6 +122,7 @@ stages {
                 }
 				finally{
 					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EnvSetup"
 				}
 			}
 		    }

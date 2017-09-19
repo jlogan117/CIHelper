@@ -12,7 +12,7 @@ stages {
 				try {
 				slackSend channel: "#onbcore", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On ${env.NODE_NAME} \n build number: ${env.BUILD_NUMBER}"
 				bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 11"
-				bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Building Onboarding\" 1"
+				bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"BuildingOnb\" 1"
 				bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
 					bat"C:\\CIHelper.exe -rcloud Build ONBCITest onb"
 				}					
@@ -23,6 +23,9 @@ stages {
                     slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Build Onboarding RC Branch \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} BuildingOnb 2400"
+				}
 			}
 		    }
 		}
@@ -33,7 +36,7 @@ stages {
 		    timeout(3){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Deleting Onb RCLoud\" 2"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"DeleteRcloud\" 2"
 					bat"C:\\CIHelper.exe -rcloud delete ONBCITest onb"
 				}					
 				catch(error){
@@ -43,6 +46,9 @@ stages {
                     slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Delete Onb rcloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} DeleteRcloud 110"
+				}
 			}
 		    }
 		}
@@ -53,7 +59,7 @@ stages {
 		    timeout(60){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Rcloud\" 3"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"CreateOnbRCloud\" 3"
 					bat"C:\\CIHelper.exe -rcloud create ONBCITest onb"
 				}					
 				catch(error){
@@ -63,6 +69,9 @@ stages {
                     slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Create onb rcloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} CreateOnbRCloud 1200"
+				}
 			}
 		    }
 		}
@@ -73,7 +82,7 @@ stages {
 		    timeout(5){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Updating SVN\" 4"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"SVNUpdate\" 4"
 					bat"C:\\SvnUpdateEcho.bat"
 				}					
 				catch(error){
@@ -83,6 +92,9 @@ stages {
                     slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To update svn \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} SVNUpdate 140"
+				}
 			}
 		    }
 		}
@@ -93,11 +105,11 @@ stages {
 		    timeout(10){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 5"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEnvironment.bat HIT-CLOUDCLOUD"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoParametersXml.bat Chrome"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\ChangeEchoEnvironmentXml.bat JamesR1 138 OnbCITest"
-					bat"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+				    bat "C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ConfigureEcho\" 5"
+					bat "C:\\CIHelper.exe -ChangeEnvironment \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.Automation.OnDemand.Onboarding.Core\\App.config\" HIT-CLOUDCLOUD"
+					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" true"    
+					bat "C:\\CIHelper.exe -changeenvironmentxml OnbCITest 138 OnbCITest"
+					bat "C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
 				}					
 				catch(error){
                     currentBuild.result = 'FAILURE'
@@ -109,6 +121,7 @@ stages {
 				finally{
 					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
+				    bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ConfigureEcho 180"
 				}
 			}
 		    }
@@ -120,7 +133,7 @@ stages {
 		    timeout(5){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Creating Onb Account\" 6"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EnvSetup\" 6"
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
 				}			
 				catch(error){
@@ -167,7 +180,7 @@ stages {
 		    timeout(300){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Federal Forms\" 8"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"FederalForms\" 8"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == FederalForms\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.txt\" "
@@ -190,7 +203,7 @@ stages {
 		    timeout(360){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"PostHireVerification Step\" 9"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"PostHireVerifyStep\" 9"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == PostHireVerifyStep\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.txt\" "
