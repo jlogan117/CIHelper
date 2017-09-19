@@ -41,3 +41,5 @@ C:\CIHelper\CIHelper\bin\Debug\CIHelper.pdb
 C:\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.dll
 C:\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.xml
 C:\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
+C:\projects\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.dll
+C:\projects\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.xml

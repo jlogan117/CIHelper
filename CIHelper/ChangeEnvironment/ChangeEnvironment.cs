@@ -80,10 +80,79 @@ namespace CIHelper
             return 0;
         }
 
-        public static int ChangeEchoParametersXml(string parametersXmlPath, string browsername = "InternetExplorer")
+        public static string GetEchoParametersXml()
         {
-            //InternetExplorer, Chrome, Firefox
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.Load(@"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml");
 
+            XmlNodeList userNodes = xdoc.GetElementsByTagName("Configuration");
+
+            foreach (XmlNode userNode in userNodes)
+            {
+                if (userNode.Attributes["Name"].Value == ".NET")
+                {
+                    return userNode.FirstChild.FirstChild.InnerText;
+                }
+            }
+            
+            return ".NET was not found in App.config";
+        }
+
+        public static int ChangeEchoParametersXml(string pipeline, bool rotate = false, string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml")
+        {
+            string browsername = null;
+            if (rotate)
+            {
+                browsername = ApiStatus.getLastRunBrowser(pipeline);
+
+                switch (browsername.ToLower())
+                {
+                    case "chrome": browsername = "InternetExplorer";
+                        break;
+                    case "internetexplorer": browsername = "Firefox";
+                        break;
+                    case "firefox": browsername = "Chrome";
+                        break;
+
+                    default: browsername = "Chrome";
+                        break;
+                }
+                
+            }
+            else
+            {
+                browsername = "Chrome";
+            }
+
+            try
+            {
+                    XmlDocument xdoc = new XmlDocument();
+                    xdoc.Load(parametersXmlPath);
+
+                    XmlNodeList userNodes = xdoc.GetElementsByTagName("Configuration");
+
+                    foreach (XmlNode userNode in userNodes)
+                    {
+                        if (userNode.Attributes["Name"].Value == ".NET")
+                        {
+                            userNode.FirstChild.FirstChild.InnerText = browsername;
+                            break;
+                        }
+                    }
+
+                    xdoc.Save(parametersXmlPath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 1;
+            }
+
+            return 0;
+        }
+
+        public static int ChangeEchoParametersXml(string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml", string browsername = "Chrome")
+        {
             try
             {
                 if (browsername != null)

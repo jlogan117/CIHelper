@@ -40,6 +40,15 @@ namespace CIHelper
                     return ChangeEnvironment.ChangeEchoEnvironmentXml(args[1], args[2], args[3], args[4]);
                 case "-changeparametersxml":
                     return ChangeEnvironment.ChangeEchoParametersXml(args[1], args[2]);
+                case "-rotatebrowser":
+                    if (args.Length == 4)
+                    {
+                        return ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]), args[3]);
+                    }
+                    else
+                    {
+                        return ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]));
+                    }
                 //case "-changeprojectframework":
                 //    return ChangeEnvironment.ChangeProjectFrameworkVersion(args[1], args[2], args[3]);
                 //case "-saveresults":

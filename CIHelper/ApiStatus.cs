@@ -6,11 +6,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CIHelper
 {
     public class ApiStatus
     {
+        //private string apiServerName = "wxvdepdprgud077";
+        private static string apiServerName = "localhost";
+
         private static readonly HttpClient client = new HttpClient();
         public string pipeline { get; set; }
 
@@ -58,7 +62,7 @@ namespace CIHelper
             //var content = new FormUrlEncodedContent(values);
             var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
 
-            var response = client.PostAsync("http://wxvdepdprgud077:8000/api/status", stringContent);
+            var response = client.PostAsync(string.Format("http://{0}:8000/api/status", apiServerName), stringContent);
 
             var responseString = response.Result.Content.ReadAsStringAsync().Result;
             Console.WriteLine(responseString);
@@ -70,14 +74,47 @@ namespace CIHelper
             return 1;
         }
 
+        public static string getLastRunBrowser(string pipelineName)
+        {
+            var response = client.GetAsync(string.Format("http://{0}:8000/api/status?pipeline={1}&status=completed", apiServerName, pipelineName));
+
+            var responseString = response.Result.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(responseString);
+
+            string browser;
+            try
+            {
+                int indexBrowser = responseString.IndexOf("browserType");
+                if (indexBrowser != -1)
+                {
+                    browser = responseString.Substring(indexBrowser + 14).Split(',')[0]
+                        .Replace("\"", "");
+                }
+                else
+                {
+                    browser = "Chrome";
+                }
+            }
+            catch (Exception e)
+            {
+                browser = "Chrome";
+            }
+
+            
+            return browser;
+        }
+
         public int updateStatus(string result)
         {
+            var browserType = ChangeEnvironment.GetEchoParametersXml();
+            
             var values = new Dictionary<string, object>
             {
                 { "pipeline", this.pipeline },
                 { "buildNumber", this.buildNumber},
-                {"dateCompleted", DateTime.Now.ToString() },
-                {"result",  result}
+                { "dateCompleted", DateTime.Now.ToString() },
+                { "result",  result},
+                { "browserType", browserType }
             };
 
             string input = JsonConvert.SerializeObject(values);
@@ -85,7 +122,7 @@ namespace CIHelper
             //var content = new FormUrlEncodedContent(values);
             var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
 
-            var response = client.PutAsync("http://wxvdepdprgud077:8000/api/status", stringContent);
+            var response = client.PutAsync(string.Format("http://{0}:8000/api/status", apiServerName), stringContent);
 
             var responseString = response.Result.Content.ReadAsStringAsync().Result;
             Console.WriteLine(responseString);
@@ -99,8 +136,7 @@ namespace CIHelper
 
         public int updateStatusWithCurrentStage(string currentStage, string stageNumber)
         {
-            //http://wxvdepdprgud077:8000/api/laststageduration?pipeline=Onboarding Core Pipeline&stage=FederalForms
-            var apiEndPoint = "http://wxvdepdprgud077:8000/api/laststageduration?pipeline=" + this.pipeline +"&stage=" + currentStage;
+            var apiEndPoint = string.Format("http://{0}:8000/api/laststageduration?pipeline=", apiServerName) + this.pipeline +"&stage=" + currentStage;
             var lastDurationResponse = client.GetAsync(apiEndPoint);
             var lastDuration = lastDurationResponse.Result.Content.ReadAsStringAsync().Result;
             if (!lastDuration.Contains("500"))
@@ -126,7 +162,7 @@ namespace CIHelper
             //var content = new FormUrlEncodedContent(values);
             var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
 
-            var response = client.PutAsync("http://wxvdepdprgud077:8000/api/status", stringContent);
+            var response = client.PutAsync(string.Format("http://{0}:8000/api/status", apiServerName), stringContent);
 
             var responseString = response.Result.Content.ReadAsStringAsync().Result;
             Console.WriteLine(responseString);
