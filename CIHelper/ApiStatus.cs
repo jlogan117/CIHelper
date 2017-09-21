@@ -92,12 +92,12 @@ namespace CIHelper
                 }
                 else
                 {
-                    browser = "Chrome";
+                    browser = "none";
                 }
             }
             catch (Exception e)
             {
-                browser = "Chrome";
+                browser = "none";
             }
 
             
