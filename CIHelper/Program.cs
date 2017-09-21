@@ -41,13 +41,22 @@ namespace CIHelper
                 case "-changeparametersxml":
                     return ChangeEnvironment.ChangeEchoParametersXml(args[1], args[2]);
                 case "-rotatebrowser":
-                    if (args.Length == 4)
+                    if (args.Length == 5)
                     {
-                        return ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]), args[3]);
+                        if (ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]), args[4]) == 0)
+                        {
+                            return ApiStatus.updateBrowser(args[1], args[3]);
+                        }
+                        return 1;
                     }
                     else
                     {
-                        return ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]));
+                        if (ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2])) == 0)
+                        {
+                            return ApiStatus.updateBrowser(args[1], args[3]);
+                            //update browser
+                        }
+                        return 1;
                     }
                 //case "-changeprojectframework":
                 //    return ChangeEnvironment.ChangeProjectFrameworkVersion(args[1], args[2], args[3]);

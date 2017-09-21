@@ -29,6 +29,34 @@ namespace CIHelper
             this.buildNumber = buildNumber;
         }
 
+        public static int updateBrowser(string pipeline, string buildNumber)
+        {
+            var browser = ChangeEnvironment.GetEchoParametersXml();
+
+            var values = new Dictionary<string, object>
+            {
+                { "pipeline", pipeline },
+                { "buildNumber", buildNumber},
+                { "browserType", browser }
+            };
+
+            string input = JsonConvert.SerializeObject(values);
+
+            //var content = new FormUrlEncodedContent(values);
+            var stringContent = new StringContent(input, Encoding.UTF8, "application/json");
+
+            var response = client.PutAsync(string.Format("http://{0}:8000/api/status/browser", apiServerName), stringContent);
+
+            var responseString = response.Result.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(responseString);
+            Debug.Print(responseString);
+            if (responseString.Contains("success"))
+            {
+                return 0;
+            }
+            return 1;
+        }
+
         public int createStatus(string stageTotal)
         {
             var upbuild = "";
