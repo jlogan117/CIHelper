@@ -120,6 +120,13 @@ namespace CIHelper
                 case "-updatestatusstage":
                     ApiStatus apiStatusUpdateStage = new ApiStatus(args[1], args[2], args[3]);
                     return apiStatusUpdateStage.updateStatusWithCurrentStage(args[4], args[5]);
+                case "-applyoneoffs":
+                    var result = ApiJira.GetOneoffJiras();
+                    if(ApiJira.ApplyOneoffs(result, args[1]) == 0)
+                    {
+                        return ApiJira.WaitOnStatus(args[1]);
+                    }
+                    return 1;
                 case "-checkeverify":
                     return EverifyChecker.CheckEverify();
                 case "-removebuilds":

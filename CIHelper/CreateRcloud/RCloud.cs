@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 
@@ -75,7 +76,32 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "create" && build != "latest")
                 {
-                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={build}", timeout: 7200);
+                    if (build != "previous")
+                    {
+                        return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={build}", timeout: 7200);
+                    }
+                    else
+                    {
+                        HttpClient client = new HttpClient();
+        //Get previous build, do retry.
+                        var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
+                        var prevUpbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
+                        //prevUpbuild.Substring(53).Split('"')[0]
+                        prevUpbuild = prevUpbuild.Substring(53).Split('"')[0];
+                        var upcreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}", timeout: 7200);
+                        if (upcreateValue == 0)
+                        {
+                            return upcreateValue;
+                        }
+                        Console.WriteLine("Error creating Ultipro RCloud on first try; retrying...");
+                        var deleteResult = DeleteIfExists(name, owner);
+                        if (deleteResult == 1)
+                        {
+                            Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
+                            return deleteResult;
+                        }
+                        return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}", timeout: 7200);
+                    }
                 }
                 if (command.ToLower() == "delete")
                 {

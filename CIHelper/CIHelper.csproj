@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiJira.cs" />
     <Compile Include="ApiReporter.cs" />
     <Compile Include="ApiStatus.cs" />
     <Compile Include="ChangeEnvironment\ChangeEnvironment.cs" />
