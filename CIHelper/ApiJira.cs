@@ -41,7 +41,7 @@ namespace CIHelper
                 {
                     oneoffString += oneOffList[i] + ",";
                 }
-                else if(i == oneOffList.Count - 1)
+                else if(i == (oneOffList.Count - 1))
                 {
                     oneoffString += " " + oneOffList[i];
                 }
@@ -68,7 +68,7 @@ namespace CIHelper
             var responseString = response.Result.Content.ReadAsStringAsync().Result;
             Console.WriteLine(responseString);
             //Debug.Print(responseString);
-            if (responseString.Contains("success"))
+            if (responseString.Contains("status_uri"))
             {
                 return 0;
             }
