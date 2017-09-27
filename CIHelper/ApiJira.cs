@@ -35,11 +35,15 @@ namespace CIHelper
             // { "one_offs_list":"ULTI-245748, ULTI-244508","owner":"shawnlo","team":"hit","name":"LakersR1","operation":"one_offs"}
             //http://deploy/env/LakersR1 
             string oneoffString = "";
-            for (int i = 0; i <= oneOffList.Count; i++)
+            for (int i = 0; i < oneOffList.Count; i++)
             {
                 if (i == 0)
                 {
                     oneoffString += oneOffList[i] + ",";
+                }
+                else if(i == oneOffList.Count - 1)
+                {
+                    oneoffString += " " + oneOffList[i];
                 }
                 else
                 {
