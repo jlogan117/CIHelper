@@ -61,13 +61,21 @@ namespace CIHelper
         {
             var upbuild = "";
             var obbuild = "";
-            if (this.pipeline.ToLower().Contains("ultipro") || this.pipeline.ToLower().Contains("integration"))
+            if ((this.pipeline.ToLower().Contains("ultipro") || this.pipeline.ToLower().Contains("integration")) && !this.pipeline.ToLower().Contains("oneoff"))
             {
                 //get latest ultipro build
                 var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
                 upbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
                 upbuild = upbuild.Substring(17).Split('"')[0];
             }
+
+            if (this.pipeline.ToLower().Contains("oneoff"))
+            {
+                var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
+                upbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
+                upbuild = upbuild.Substring(53).Split('"')[0];
+            }
+
             if (this.pipeline.ToLower().Contains("onboarding"))
             {
                 var obBuildResponse = client.GetAsync("http://deploy/products/onboarding");
