@@ -98,10 +98,14 @@ namespace CIHelper
             return ".NET was not found in App.config";
         }
 
-        public static int ChangeEchoParametersXml(string pipeline, bool rotate = false, string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml")
+        public static int ChangeEchoParametersXml(string pipeline, bool rotate = false, string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml", string specifiedBrowser = null)
         {
             string browsername = null;
-            if (rotate)
+            if(specifiedBrowser != null)
+            {
+                browsername = specifiedBrowser;
+            }
+            if (rotate && browsername == null)
             {
                 browsername = ApiStatus.getLastRunBrowser(pipeline);
 
@@ -116,10 +120,9 @@ namespace CIHelper
 
                     default: browsername = "Chrome";
                         break;
-                }
-                
+                }              
             }
-            else
+            else if(browsername == null)
             {
                 browsername = "Chrome";
             }

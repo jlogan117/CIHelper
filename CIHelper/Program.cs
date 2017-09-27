@@ -41,7 +41,7 @@ namespace CIHelper
                 case "-changeparametersxml":
                     return ChangeEnvironment.ChangeEchoParametersXml(args[1], args[2]);
                 case "-rotatebrowser":
-                    if (args.Length == 5)
+                    if (args.Length == 5 && args[4].ToLower().Contains("parameter"))
                     {
                         if (ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]), args[4]) == 0)
                         {
@@ -49,9 +49,18 @@ namespace CIHelper
                         }
                         return 1;
                     }
-                    else
+                    else if(args.Length < 5)
                     {
                         if (ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2])) == 0)
+                        {
+                            return ApiStatus.updateBrowser(args[1], args[3]);
+                            //update browser
+                        }
+                        return 1;
+                    }
+                    else
+                    {
+                        if (ChangeEnvironment.ChangeEchoParametersXml(args[1], Convert.ToBoolean(args[2]), specifiedBrowser: args[4]) == 0)
                         {
                             return ApiStatus.updateBrowser(args[1], args[3]);
                             //update browser
