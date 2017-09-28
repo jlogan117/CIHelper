@@ -113,10 +113,10 @@ namespace CIHelper
                 {
                     case "chrome": browsername = "InternetExplorer";
                         break;
-                    case "internetexplorer": browsername = "Edge";
+                    case "internetexplorer": browsername = "Chrome";
                         break;
-                    case "edge": browsername = "Chrome";
-                        break;
+                    //case "edge": browsername = "Chrome";
+                    //    break;
 
                     default: browsername = "Chrome";
                         break;

@@ -138,6 +138,8 @@ namespace CIHelper
                     return 1;
                 case "-checkeverify":
                     return EverifyChecker.CheckEverify();
+                case "-checkeverifyprod":
+                    return EverifyChecker.checkProdEverify();
                 case "-removebuilds":
                     try
                     {

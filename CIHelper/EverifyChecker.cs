@@ -37,6 +37,34 @@ namespace CIHelper
             }
         }
 
+        public static int checkProdEverify()
+        {
+            string prodUrl = "https://n-e-verify.uscis.gov/services/EmployerWebServiceV29.svc?wsdl";
+            HttpWebResponse response;
+            var request = (HttpWebRequest)WebRequest.Create(prodUrl);
+            request.Method = "GET";
+            request.ContentType = "application/json";
+            request.ContentLength = 0;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                var body = ReadBody(response);
+                Console.WriteLine(body);
+                string returnString = response.StatusCode.ToString();
+                if (returnString.ToLower() == "ok" && body.ToLower().Contains("http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"))
+                {
+                    Console.WriteLine("Everify is up and running..");
+                    return 0;
+                }
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
+        }
+
         public static string ReadBody(HttpWebResponse response)
         {
             string responseBody;
