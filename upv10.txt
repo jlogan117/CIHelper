@@ -84,8 +84,8 @@ stages {
 				try {
 				    bat "C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ConfigureEcho\" 4"
 					bat "C:\\CIHelper.exe -ChangeEnvironment \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.Automation.OnDemand.UltiPro\\App.config\" HIT-CLOUDCLOUD"
-					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" true"
-					bat "C:\\CIHelper.exe -changeenvironmentxml Upten 138 Upten"
+					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" false ${env.BUILD_NUMBER}"
+					bat "C:\\CIHelper.exe -changeenvironmentxml \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.Environments.xml\" Upten 138 Upten"
 					bat "C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
 				}					
 				catch(error){
@@ -121,7 +121,7 @@ stages {
 					throw error
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EnvSetup"
 				}
 			}
@@ -131,7 +131,7 @@ stages {
         
 	stage('Run V10Grid Tests') {
 		steps {
-		    timeout(70){
+		    timeout(100){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10Grid\" 6"
@@ -144,7 +144,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10Grid.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10Grid.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10Grid"
 				}
 			}
@@ -154,7 +154,7 @@ stages {
         
 	stage('Run V10CanadaNewHireAndRehire Tests') {
 		steps {
-		    timeout(60){
+		    timeout(100){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10CanadaNewHireAndRehire\" 7"
@@ -167,7 +167,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10CanadaNewHireAndRehire.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10CanadaNewHireAndRehire.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10CanadaNewHireAndRehire"
 				}
 			}
@@ -177,7 +177,7 @@ stages {
 		
 	stage('Run V10UsaNewHire Tests') {
 		steps {
-		    timeout(330){
+		    timeout(500){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10UsaNewHire\" 8"
@@ -190,7 +190,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaNewHire.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaNewHire.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10UsaNewHire"
 				}
 			}
@@ -200,7 +200,7 @@ stages {
 		
 	stage('Run V10UsaRehire Tests') {
 		steps {
-		    timeout(200){
+		    timeout(350){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10UsaRehire\" 9"
@@ -213,7 +213,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaRehire.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaRehire.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10UsaRehire"
 				}
 			}
@@ -223,7 +223,7 @@ stages {
 		
 	stage('Run V10OnbService Tests') {
 		steps {
-		    timeout(480){
+		    timeout(700){
 			script {
 				try {
 				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10OnbService\" 10"
@@ -236,7 +236,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10OnbService.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10OnbService.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10OnbService"
 				}
 			}
