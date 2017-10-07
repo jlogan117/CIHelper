@@ -61,26 +61,27 @@ namespace CIHelper
         {
             var upbuild = "";
             var obbuild = "";
+            var altbuild = "";
             if ((this.pipeline.ToLower().Contains("ultipro") || this.pipeline.ToLower().Contains("integration")) && !this.pipeline.ToLower().Contains("oneoff"))
             {
                 //get latest ultipro build
                 var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
-                upbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
-                upbuild = upbuild.Substring(17).Split('"')[0];
+                altbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
+                altbuild = altbuild.Substring(17).Split('"')[0];
             }
 
             if (this.pipeline.ToLower().Contains("oneoff"))
             {
                 var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
-                upbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
-                upbuild = upbuild.Substring(53).Split('"')[0];
+                altbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
+                altbuild = altbuild.Substring(53).Split('"')[0];
             }
 
             if (this.pipeline.ToLower().Contains("onboarding"))
             {
                 var obBuildResponse = client.GetAsync("http://deploy/products/onboarding");
-                obbuild = obBuildResponse.Result.Content.ReadAsStringAsync().Result;
-                obbuild = obbuild.Substring(17).Split('"')[0];
+                altbuild = obBuildResponse.Result.Content.ReadAsStringAsync().Result;
+                altbuild = altbuild.Substring(17).Split('"')[0];
             }
             var values = new Dictionary<string, object>
             {
@@ -89,8 +90,7 @@ namespace CIHelper
                 { "machineName", this.machineName },
                 {"dateStarted", DateTime.Now.ToString() },
                 {"stageTotal",  stageTotal},
-                {"upBuildNumber", upbuild },
-                {"onbBuildNumber", obbuild }
+                {"alternateBuildNumber", altbuild }
             };
 
             string input = JsonConvert.SerializeObject(values);
