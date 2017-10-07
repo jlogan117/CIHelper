@@ -77,7 +77,7 @@ namespace CIHelper
                 altbuild = altbuild.Substring(53).Split('"')[0];
             }
 
-            if (this.pipeline.ToLower().Contains("onboarding"))
+            if (this.pipeline.ToLower().Contains("onboarding") && !this.pipeline.ToLower().Contains("integration"))
             {
                 var obBuildResponse = client.GetAsync("http://deploy/products/onboarding");
                 altbuild = obBuildResponse.Result.Content.ReadAsStringAsync().Result;
