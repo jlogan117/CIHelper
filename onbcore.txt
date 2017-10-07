@@ -107,8 +107,8 @@ stages {
 				try {
 				    bat "C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ConfigureEcho\" 5"
 					bat "C:\\CIHelper.exe -ChangeEnvironment \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.Automation.OnDemand.Onboarding.Core\\App.config\" HIT-CLOUDCLOUD"
-					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" true"    
-					bat "C:\\CIHelper.exe -changeenvironmentxml OnbCITest 138 OnbCITest"
+					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" true ${env.BUILD_NUMBER}"  
+					bat "C:\\CIHelper.exe -changeenvironmentxml \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.Environments.xml\" OnbCITest 138 OnbCITest"
 					bat "C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
 				}					
 				catch(error){
@@ -130,7 +130,7 @@ stages {
 	
 	stage('Create Onboarding Account SB122') {
 		steps {
-		    timeout(5){
+		    timeout(10){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EnvSetup\" 6"
@@ -144,7 +144,7 @@ stages {
 					throw error
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EnvSetup"
 				}
 			}
@@ -154,7 +154,7 @@ stages {
         
 	stage('Run AppConfigSettings Tests') {
 		steps {
-		    timeout(30){
+		    timeout(60){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"AppConfigSettings\" 7"
@@ -167,7 +167,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\AppConfigSettings.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} AppConfigSettings"
 				}
 			}
@@ -177,7 +177,7 @@ stages {
         
 	stage('Run FederalForms Tests') {
 		steps {
-		    timeout(300){
+		    timeout(450){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"FederalForms\" 8"
@@ -190,7 +190,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\FederalForms.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} FederalForms"
 				}
 			}
@@ -200,7 +200,7 @@ stages {
 		
 	stage('Run PostHireVerifyStep Tests') {
 		steps {
-		    timeout(360){
+		    timeout(500){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"PostHireVerifyStep\" 9"
@@ -213,7 +213,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\PostHireVerifyStep.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} PostHireVerifyStep"
 				}
 			}
@@ -223,7 +223,7 @@ stages {
 		
 	stage('Run NewEmployeeStep Tests') {
 		steps {
-		    timeout(300){
+		    timeout(450){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"NewEmployeeStep\" 10"
@@ -236,7 +236,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\NewEmployeeStep.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} NewEmployeeStep"
 				}
 			}
@@ -246,7 +246,7 @@ stages {
 		
 	stage('Run StatePanelChecks Tests') {
 		steps {
-		    timeout(270){
+		    timeout(425){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"StatePanelChecks\" 11"
@@ -259,7 +259,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\StatePanelChecks.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} StatePanelChecks"
 				}
 			}

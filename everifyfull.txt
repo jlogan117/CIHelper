@@ -11,7 +11,7 @@ stages {
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 6"
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"Configuring Echo\" 1"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ConfigureEcho\" 1"
 				    bat"C:\\CIHelper.exe -checkeverify"
 					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
 				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
@@ -24,6 +24,9 @@ stages {
                     slackSend channel: "#onbcore", color: '#FF0000', message: "FAILED To Configure Echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
 					throw error
                 }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ConfigureEcho 2"
+				}
 			}
 		    }
 		}
@@ -31,7 +34,7 @@ stages {
     
 	stage('Run EVerifyAutomatic Tests') {
 		steps {
-		    timeout(360){
+		    timeout(550){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyAutomatic\" 2"
@@ -45,7 +48,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyAutomatic.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyAutomatic.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifyAutomatic"
 				}
 			}
@@ -55,7 +58,7 @@ stages {
 	
 	stage('Run EVerifyDhs Tests') {
 		steps {
-		    timeout(360){
+		    timeout(550){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyDhs\" 3"
@@ -68,7 +71,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDhs.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDhs.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifyDhs"
 				}
 			}
@@ -78,7 +81,7 @@ stages {
 	
 	stage('Run EVerifyDuplicateAndResolveCase Tests') {
 		steps {
-		    timeout(200){
+		    timeout(400){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifyDuplicateAndResolveCase\" 4"
@@ -91,7 +94,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDuplicateAndResolveCase.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifyDuplicateAndResolveCase.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifyDuplicateAndResolveCase"
 				}
 			}
@@ -101,7 +104,7 @@ stages {
 
 	stage('Run EVerifySsa Tests') {
 		steps {
-		    timeout(630){
+		    timeout(850){
 			script {
 				try {
 				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySsa\" 5"
@@ -114,7 +117,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySsa.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySsa.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifySsa"
 				}
 			}
@@ -124,10 +127,10 @@ stages {
 
 	stage('Run EVerifySubmitInitial Tests') {
 		steps {
-		    timeout(150){
+		    timeout(300){
 			script {
 				try {
-				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySubmitInitial\" 6"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EVerifySubmiteIntial\" 6"
 				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
 				    
 					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.Onboarding.Core.dll\" --where \"cat == EVerifySubmiteIntial\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySubmiteIntial.txt\" "
@@ -137,7 +140,7 @@ stages {
 					return
                 }
 				finally{
-					bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySubmiteIntial.html\" /y "
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EVerifySubmiteIntial.html\" /y "
 					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EVerifySubmiteIntial"
 				}
 			}

@@ -1,0 +1,467 @@
+pipeline {
+    agent { 
+		label 'DEVODW803'
+	}
+	
+stages {
+    
+	stage('Deleting Existing RCloud') {
+		steps {
+		    timeout(3){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -createstatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} 17"
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"DeleteUpCloud\" 1"
+					slackSend channel: "#upv10", color: '#FFFF00', message: "STARTING: ${env.JOB_NAME} On DEVODW710 \n build number: ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -removebuilds ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
+					bat"C:\\CIHelper.exe -rcloud delete Uponeoff up JavierN"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+                    def urlnba = "file://DEVODW710/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To delete UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} DeleteUpCloud 120"
+				}
+			}
+		    }
+		}
+	}
+	
+	stage('Create Ultipro RCloud') {
+		steps {
+		    timeout(130){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"CreateUpCloud\" 2"
+					bat"C:\\CIHelper.exe -rcloud create UpOneoff up JavierN previous"
+				}					
+				catch(error){
+                   currentBuild.result = 'FAILURE'
+                   bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+				   def urlnba = "file://DEVODW710/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Create UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+               }
+               finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} CreateUpCloud 6000"
+				}
+			}
+		    }
+		}
+	}
+	stage('ApplyOneoffs') {
+		steps {
+		    timeout(100){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ApplyOneoffs\" 3"
+					 bat"C:\\CIHelper.exe -applyoneoffs UpOneoff"
+				}					
+				catch(error){
+                   currentBuild.result = 'FAILURE'
+                   bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+				   def urlnba = "file://DEVODW710/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Create UltiPro RCloud \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+               }
+               finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ApplyOneoffs 30000"
+				}
+			}
+		    }
+		}
+	}
+	
+	stage('SVN Update') {
+		steps {
+		    timeout(30){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"SvnUpdate\" 3"
+					bat"C:\\SvnUpdateEcho.bat"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+					def urlnba = "file://DEVODW710/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Update SVN \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+                finally{
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} SvnUpdate 600"
+				}
+			}
+		    }
+		}
+	}
+	
+	stage('Configure Echo') {
+		steps {
+		    timeout(10){
+			script {
+				try {
+				    bat "C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"ConfigureEcho\" 4"
+					bat "C:\\CIHelper.exe -ChangeEnvironment \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.Automation.OnDemand.UltiPro\\App.config\" HIT-CLOUDCLOUD"
+					bat "C:\\CIHelper.exe -rotatebrowser \"${env.JOB_NAME}\" true ${env.BUILD_NUMBER}"
+					bat "C:\\CIHelper.exe -changeenvironmentxml \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.Environments.xml\" UpOneoff 138 UpOneoff"
+					bat "C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\Echo.nunit.TestSupport\\HITSetup\\BuildEcho.bat"
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+					def urlnba = "file://DEVODW710/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Configure Echo \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+				finally{
+					bat" if not exist \"C:\\${env.JOB_NAME}\" md \"C:\\${env.JOB_NAME}\" "
+				    bat" md \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\" "
+				    bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ConfigureEcho 150"
+				}
+			}
+		    }
+		}
+	}
+	
+	stage('Environment Setup') {
+		steps {
+		    timeout(10){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"EnvSetup\" 5"
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == EnvSetup\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.txt\" "
+				}			
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+                    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+					def urlnba = "file://DEVODW710/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Setup Environment \n Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\EnvSetup.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} EnvSetup"
+				}
+			}
+		    }
+		}
+	}
+        
+	stage('Run V10Grid Tests') {
+		steps {
+		    timeout(100){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10Grid\" 6"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V10Grid\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10Grid.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10Grid.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10Grid"
+				}
+			}
+		    }
+		}
+	}
+        
+	stage('Run V10CanadaNewHireAndRehire Tests') {
+		steps {
+		    timeout(100){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10CanadaNewHireAndRehire\" 7"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V10CanadaNewHireAndRehire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10CanadaNewHireAndRehire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10CanadaNewHireAndRehire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10CanadaNewHireAndRehire"
+				}
+			}
+		    }
+		}
+	}
+		
+	stage('Run V10UsaNewHire Tests') {
+		steps {
+		    timeout(500){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10UsaNewHire\" 8"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V10UsaNewHire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaNewHire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaNewHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10UsaNewHire"
+				}
+			}
+		    }
+		}
+	}
+		
+	stage('Run V10UsaRehire Tests') {
+		steps {
+		    timeout(350){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10UsaRehire\" 9"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V10UsaRehire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaRehire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10UsaRehire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10UsaRehire"
+				}
+			}
+		    }
+		}
+	}
+		
+	stage('Run V10OnbService Tests') {
+		steps {
+		    timeout(700){
+			script {
+				try {
+				     bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V10OnbService\" 10"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V10OnbService\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10OnbService.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V10OnbService.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V10OnbService"
+				}
+			}
+		    }
+		}
+    }
+    	stage('Run V14Grid Tests') {
+		steps {
+		    timeout(150){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V14Grid\" 11"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V14Grid\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14Grid.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14Grid.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14Grid"
+				}
+			}
+		    }
+		}
+	}
+        
+	stage('Run V14CanadaNewHire Tests') {
+		steps {
+		    timeout(350){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V14CanadaNewHire\" 12"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V14CanadaNewHire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaNewHire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaNewHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14CanadaNewHire"
+				}
+			}
+		    }
+		}
+	}
+		
+	stage('Run V14CanadaRehire Tests') {
+		steps {
+		    timeout(450){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V14CanadaRehire\" 13"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V14CanadaRehire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaRehire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14CanadaRehire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14CanadaRehire"
+				}
+			}
+		    }
+		}
+	}
+		
+	stage('Run V14UsaNewHire Tests') {
+		steps {
+		    timeout(350){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V14UsaNewHire\" 14"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V14UsaNewHire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaNewHire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaNewHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14UsaNewHire"
+				}
+			}
+		    }
+		}
+	}
+		
+	stage('Run V14UsaRehire Tests') {
+		steps {
+		    timeout(400){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V14UsaRehire\" 15"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V14UsaRehire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaRehire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14UsaRehire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14UsaRehire"
+				}
+			}
+		    }
+		}
+    }
+	
+	stage('Run V14SupplementalData Tests') {
+		steps {
+		    timeout(150){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"V14SupplementalData\" 16"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == V14SupplementalData\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14SupplementalData.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\V14SupplementalData.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} V14SupplementalData"
+				}
+			}
+		    }
+		}
+    }
+    
+    stage('Global Tests') {
+		steps {
+		    timeout(200){
+			script {
+				try {
+				    bat"C:\\CIHelper.exe -updatestatusstage ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} \"GlobalHire\" 17"
+				    bat"\\\\denver2\\Groups\\OnDemand\\Public\\Onboarding\\PSTools\\PsExec.exe \\\\${env.NODE_NAME} -u DEVCORP\\svc.od.acct -p Ond3m@nd -h C:\\Cleanup.bat"
+				    
+					bat"\"C:\\NUnit\\nunit-console\\nunit3-console.exe\" \"C:\\Projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\Echo.Automation.OnDemand.UltiPro.dll\" --where \"cat == GlobalHire\" > \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\GlobalHire.txt\" "
+				}					
+				catch(error){
+                    currentBuild.result = 'FAILURE'
+					return
+                }
+				finally{
+					//bat"copy \"C:\\projects\\UltiPro.NET\\AutomatedTests\\Echo\\EchoBin\\EchoErrors.html\" \"C:\\${env.JOB_NAME}\\${env.BUILD_NUMBER}\\GlobalHire.html\" /y "
+					bat"C:\\CIHelper.exe -reportapi ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} GlobalHire"
+				}
+			}
+		    }
+		}
+    }
+	
+	stage('Slack Notification') {
+		steps {
+		    timeout(1){
+			script {
+				try {
+				     if ("${currentBuild.result}" == "null") {
+			            currentBuild.result = "SUCCESS"
+                     }
+				    bat"C:\\CIHelper.exe -updatestatus ${env.NODE_NAME} \"${env.JOB_NAME}\" ${env.BUILD_NUMBER} ${currentBuild.result}"
+				   def params = "C:\\CIHelper.exe -getpassed DEVODW803 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}"
+				   def work = bat(returnStdout: true, script: "C:\\CIHelper.exe -getpassed DEVODW710 \"${env.JOB_NAME}\" ${env.BUILD_NUMBER}").trim()
+				   work = work.substring(109).trim()
+				   notifyBuild("${currentBuild.result}", "${work}")
+                }
+                catch(error){
+                    currentBuild.result = 'FAILURE'
+					def urlnba = "file://DEVODW803/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+                    slackSend channel: "#upv10", color: '#FF0000', message: "FAILED To Report Results: ${env.JOB_NAME} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+					throw error
+                }
+			}
+		    }
+		}
+    }
+        
+}
+}
+def notifyBuild(String buildStatus = 'SUCCESS', String work) {
+	    if (buildStatus == "null" || buildStatus == "SUCCESS") {
+            color = 'GREEN'
+            colorCode = '#00FF00'
+			buildStatus = "SUCCESS"
+        } else {
+            color = 'RED'
+            colorCode = '#FF0000'
+        }
+        def urlnba = "file://DEVODW803/c\$/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+	    slackSend channel: "#upv10", color: colorCode, message: "${buildStatus}: ${env.JOB_NAME} \n ${work} \n build number: ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open Jenkins>) (<${urlnba}|Files>)"
+	}
