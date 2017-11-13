@@ -53,7 +53,7 @@ namespace CIHelper
                 string returnString = response.StatusCode.ToString();
                 if (returnString.ToLower() == "ok" && body.ToLower().Contains("http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"))
                 {
-                    Console.WriteLine("Everify is up and running..");
+                    Console.WriteLine("everify is up and running..");
                     return 0;
                 }
                 return 1;
