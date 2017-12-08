@@ -154,7 +154,7 @@ namespace CIHelper
                 {
                     initialIndex = failureIndex;
                 }
-                if(failureIndex != -1 && errorIndex == -1)
+                else if(failureIndex != -1 && errorIndex == -1)
                 {
                     initialIndex = failureIndex;
                 }
