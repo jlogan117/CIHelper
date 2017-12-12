@@ -46,7 +46,8 @@ namespace CIHelper.CreateRcloud
                         Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
                         return deleteResult;
                     }
-                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&RC_osname=win2008r2");
+                    //return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&RC_osname=win2008r2");
+                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&RC_osname=win2012");
                 }
 
                 Console.WriteLine("INVALID PARAMETER HAS BEEN PASSED TO THE EXECUTABLE");
