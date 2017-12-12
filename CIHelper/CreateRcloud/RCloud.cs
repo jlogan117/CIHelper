@@ -29,10 +29,12 @@ namespace CIHelper.CreateRcloud
                     return DeleteIfExists(name, owner);
                 }
                 //RC_osname = win2008r2
+                //win2012
                 if (command.ToLower() == "create")
                 {
                     Console.WriteLine($@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
-                    var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
+                    //var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
+                    var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2012");
                     if (createResult == 0)
                     {
                         return createResult;
