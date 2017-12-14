@@ -149,7 +149,7 @@ namespace CIHelper
                                 .ToList();
                         int buildDelete = Convert.ToInt32(args[3]) - 5;
                         Console.WriteLine("Deleting build directories ending at build "+ buildDelete);
-                        for (int i = 0; i <= buildDirectory.Count; i++)
+                        for (int i = 0; i < buildDirectory.Count; i++)
                         {
                             int index = buildDirectory[i].LastIndexOf(@"\");
                             int value = Convert.ToInt32(buildDirectory[i].Substring(index + 1));

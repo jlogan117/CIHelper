@@ -14,8 +14,8 @@ namespace CIHelper
     {
         private static string apiServerName = "wxvdepdprgud077";
         //private static string apiServerName = "localhost";
-
-        private static readonly HttpClient client = new HttpClient();
+private static readonly HttpClient client = new HttpClient();
+        
         public string pipeline { get; set; }
 
         public string buildNumber { get; set; }
