@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Net.Http;
 using System.Xml;
 
 namespace CIHelper
@@ -70,6 +72,64 @@ namespace CIHelper
                     xDoc.InnerXml = newdoc;
                     xDoc.Save(environmentXmlPath);
                 }
+                var upPassword = "";
+                //Ultipro
+                using (var client = new HttpClient())
+                {
+                    var response = client.GetAsync($"http://deploy.newgen.corp/env/{rcloudname}");
+                    var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                    dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
+                    upPassword = envGetObject.creds.sa;
+                }
+                var onbPassword = "";
+                //Ultipro
+                using (var client = new HttpClient())
+                {
+                    var response = client.GetAsync($"http://deploy.newgen.corp/env/{onbcloudname}");
+                    var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                    dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
+                    onbPassword = envGetObject.creds.sa;
+                }
+
+                XmlDocument doc = new XmlDocument();
+                doc.Load(environmentXmlPath);
+                XmlNodeList userNodes = doc.GetElementsByTagName("UltiPro");
+                Console.WriteLine(userNodes.Count);
+                Console.WriteLine(userNodes.ToString());
+                foreach (XmlNode userNode in userNodes)
+                {
+                    var test = userNode.FirstChild;
+                    while (test != null)
+                    {
+                        if (test.Attributes["Password"] != null)
+                        {
+                            test.Attributes["Password"].Value = upPassword;
+                            //break;
+                        }
+                        test = test.NextSibling;
+                    }
+                }
+
+                doc.Save(environmentXmlPath);
+
+                userNodes = doc.GetElementsByTagName("Onboarding");
+
+                foreach (XmlNode userNode in userNodes)
+                {
+                    var test = userNode.FirstChild;
+                    while (test != null)
+                    {
+                        if (test.Attributes != null && test.Attributes.Count > 2 && test.Attributes["Password"] != null)
+                        {
+                            test.Attributes["Password"].Value = onbPassword;
+                            //break;
+                        }
+                        test = test.NextSibling;
+                        Console.WriteLine(test);
+                    }
+                }
+
+                doc.Save(environmentXmlPath);
             }
             catch (Exception e)
             {

@@ -17,13 +17,14 @@ namespace CIHelper
         public static List<string> GetOneoffJiras()
         {
             //http://wxvdepdprgud077:8000/api/jirasearch?jql= project = UltiPro AND type = OneOff AND "Target Customer Deployment Date" > 0d AND "Target Customer Deployment Date" < 7d AND status not in (Canceled) ORDER BY key ASC
-            string query = @"jql= project = UltiPro AND type = OneOff AND ""Target Customer Deployment Date"" > 0d AND ""Target Customer Deployment Date"" < 7d AND status not in (Canceled) ORDER BY ""Target Customer Deployment Date"" ASC, key ASC";
+            string query = @"jql= project = UltiPro AND type = OneOff AND ""Target Customer Deployment Date"" >= 0d AND ""Target Customer Deployment Date"" < 10d AND status not in (Canceled) ORDER BY ""Target Customer Deployment Date"" ASC, key ASC";
             var upbuildReponse = client.GetAsync("http://wxvdepdprgud077:8000/api/jirasearch?" + query);
             var response = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
             var jiraNumberArray = response.Split(new string[] { "jiraNumber" }, StringSplitOptions.None).ToList();
             var jiraArray = new List<string>();
             for (int i = 1; i < jiraNumberArray.Count; i++)
             {
+                Console.WriteLine(jiraNumberArray[i].Substring(3, 11));
                 jiraArray.Add(jiraNumberArray[i].Substring(3, 11));
             }
             return jiraArray;
@@ -50,6 +51,9 @@ namespace CIHelper
                     oneoffString += " " + oneOffList[i] + ",";
                 }
             }
+            Console.WriteLine("ONEOFFS APPLIED TO THIS ENV: ");
+            Console.WriteLine(oneoffString);
+            Console.WriteLine(envname);
             var values = new Dictionary<string, object>
             {
                 { "one_offs_list", oneoffString },
@@ -68,6 +72,8 @@ namespace CIHelper
             var responseString = response.Result.Content.ReadAsStringAsync().Result;
             Console.WriteLine(responseString);
             //Debug.Print(responseString);
+            Console.WriteLine("ONEOFF RESPONSE: ");
+            Console.WriteLine(responseString);
             if (responseString.Contains("status_uri"))
             {
                 return 0;

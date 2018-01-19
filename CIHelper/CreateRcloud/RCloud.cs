@@ -32,7 +32,7 @@ namespace CIHelper.CreateRcloud
                 //win2012
                 if (command.ToLower() == "create")
                 {
-                    Console.WriteLine($@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
+                    //Console.WriteLine($@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
                     //var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2008r2");
                     var createResult = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2012");
                     if (createResult == 0)
@@ -47,7 +47,7 @@ namespace CIHelper.CreateRcloud
                         return deleteResult;
                     }
                     //return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&RC_osname=win2008r2");
-                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&RC_osname=win2012");
+                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&team=hit&email=james_logan@ultimatesoftware.com&type=onboarding&osname=win2012");
                 }
 
                 Console.WriteLine("INVALID PARAMETER HAS BEEN PASSED TO THE EXECUTABLE");
