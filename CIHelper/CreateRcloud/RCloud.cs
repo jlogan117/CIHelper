@@ -26,6 +26,11 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "delete")
                 {
+                    //if (File.Exists(@"C:\\envname.txt"))
+                    //{
+                    //    name = File.ReadAllText(@"C:\\envname.txt");
+                    //}
+                    //File.WriteAllText(@"C:\\envname.txt", finalString);
                     return DeleteIfExists(name, owner);
                 }
                 //RC_osname = win2008r2
@@ -62,7 +67,7 @@ namespace CIHelper.CreateRcloud
                 if (command.ToLower() == "create" && build == "latest")
                 {
                     //"env/{0}?owner={1}&email={2}&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true
-                    int upCreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true", timeout: 7200);
+                    int upCreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&identity=true", timeout: 7200);
                     if (upCreateValue == 0)
                     {
                         return upCreateValue;
@@ -108,6 +113,10 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "delete")
                 {
+                    if (File.Exists(@"C:\\envname.txt"))
+                    {
+                        name = File.ReadAllText(@"C:\\envname.txt");
+                    }
                     return DeleteIfExists(name, owner);
                 }
 
@@ -301,9 +310,16 @@ namespace CIHelper.CreateRcloud
                 var body = ReadBody(response);
                 Console.WriteLine(body);
                 if (!body.ToLower().Contains("\"done\":true"))
-                {
+                {                 
                     Console.WriteLine($"\n{name} Has Not Completed Creation.");
                     return 1;
+                }
+                else
+                {
+                    if (!body.ToLower().Contains("\"succeeded\":true"))
+                    {
+                        throw new Exception("RCloud Failed");
+                    }
                 }
             }
             catch (Exception ex)

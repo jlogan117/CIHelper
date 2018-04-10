@@ -37,7 +37,8 @@ namespace CIHelper
                 case "-changeenvironment":
                     return ChangeEnvironment.ChangeEchoEnvironment(args[1], args[2]);
                 case "-changeenvironmentxml":
-                    return ChangeEnvironment.ChangeEchoEnvironmentXml(args[1], args[2], args[3], args[4]);
+                    string name = File.ReadAllText(@"C:\\envname.txt");
+                    return ChangeEnvironment.ChangeEchoEnvironmentXml(args[1], name, args[3], args[4]);
                 case "-changeparametersxml":
                     return ChangeEnvironment.ChangeEchoParametersXml(args[1], args[2]);
                 case "-rotatebrowser":
@@ -78,17 +79,18 @@ namespace CIHelper
                 case "-results":
                     return SaveTestResults.SaveTestRunResults(args[1]);
                 case "-rcloud":
+                    string nameRCloud = GenerateEnvName();
                     if (args.Length == 4)
                     {
-                        return RCloud.ExecuteRCloudCommand(args[1], args[2], args[3]);
+                        return RCloud.ExecuteRCloudCommand(args[1], nameRCloud, args[3]);
                     }
                     if (args.Length == 5)
                     {
-                        return RCloud.ExecuteRCloudCommand(args[1], args[2], args[3], args[4]);
+                        return RCloud.ExecuteRCloudCommand(args[1], nameRCloud, args[3], args[4]);
                     }
                     if (args.Length == 6)
                     {
-                        return RCloud.ExecuteRCloudCommand(args[1], args[2], args[3], args[4], args[5]);
+                        return RCloud.ExecuteRCloudCommand(args[1], nameRCloud, args[3], args[4], args[5]);
                     }
                     Console.WriteLine("Invalid parameter amount.");
                     return 1;
@@ -223,6 +225,22 @@ namespace CIHelper
             var fileText =  File.ReadAllText(fileCopy);
             File.Delete(fileCopy);
             return fileText;
+        }
+
+        private static string GenerateEnvName()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var finalString = new String(stringChars);
+            File.WriteAllText(@"C:\\envname.txt", finalString);
+            return finalString;
         }
     }
 }
