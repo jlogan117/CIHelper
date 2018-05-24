@@ -37,8 +37,17 @@ namespace CIHelper
                 case "-changeenvironment":
                     return ChangeEnvironment.ChangeEchoEnvironment(args[1], args[2]);
                 case "-changeenvironmentxml":
-                    string name = File.ReadAllText(@"C:\\envname.txt");
-                    return ChangeEnvironment.ChangeEchoEnvironmentXml(args[1], name, args[3], args[4]);
+                    string onbname = "Dummy";
+                    string upname = "Dummyup";
+                    if (File.Exists(@"C:\\envname.txt"))
+                    {
+                        onbname = File.ReadAllText(@"C:\\envname.txt");
+                    }
+                    if (File.Exists("@C:\\envnameup.txt"))
+                    {
+                        upname = File.ReadAllText("@C:\\envnameup.txt");
+                    }
+                    return ChangeEnvironment.ChangeEchoEnvironmentXml(args[1], upname, args[3], onbname);
                 case "-changeparametersxml":
                     return ChangeEnvironment.ChangeEchoParametersXml(args[1], args[2]);
                 case "-rotatebrowser":
@@ -79,7 +88,7 @@ namespace CIHelper
                 case "-results":
                     return SaveTestResults.SaveTestRunResults(args[1]);
                 case "-rcloud":
-                    string nameRCloud = GenerateEnvName();
+                    string nameRCloud = GenerateEnvName(args[3].ToLower().Contains("onb"));
                     if (args.Length == 4)
                     {
                         return RCloud.ExecuteRCloudCommand(args[1], nameRCloud, args[3]);
@@ -227,7 +236,7 @@ namespace CIHelper
             return fileText;
         }
 
-        private static string GenerateEnvName()
+        private static string GenerateEnvName(bool onb)
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[8];
@@ -239,7 +248,14 @@ namespace CIHelper
             }
 
             var finalString = new String(stringChars);
-            File.WriteAllText(@"C:\\envname.txt", finalString);
+            if (onb)
+            {
+                File.WriteAllText(@"C:\\envname.txt", finalString);
+            }
+            else
+            {
+                File.WriteAllText(@"C:\\envnameup.txt", finalString);
+            }
             return finalString;
         }
     }

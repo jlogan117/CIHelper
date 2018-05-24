@@ -26,10 +26,10 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "delete")
                 {
-                    //if (File.Exists(@"C:\\envname.txt"))
-                    //{
-                    //    name = File.ReadAllText(@"C:\\envname.txt");
-                    //}
+                    if (File.Exists(@"C:\\envname.txt"))
+                    {
+                        name = File.ReadAllText(@"C:\\envname.txt");
+                    }
                     //File.WriteAllText(@"C:\\envname.txt", finalString);
                     return DeleteIfExists(name, owner);
                 }
@@ -113,9 +113,9 @@ namespace CIHelper.CreateRcloud
                 }
                 if (command.ToLower() == "delete")
                 {
-                    if (File.Exists(@"C:\\envname.txt"))
+                    if (File.Exists(@"C:\\envnameup.txt"))
                     {
-                        name = File.ReadAllText(@"C:\\envname.txt");
+                        name = File.ReadAllText(@"C:\\envnameup.txt");
                     }
                     return DeleteIfExists(name, owner);
                 }
