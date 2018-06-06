@@ -21,9 +21,19 @@ namespace CIHelper
             switch (args[0].ToLower())
             {
                 case "-setappconfig":
-                    return AppConfig.UpdateAppConfigValue(args[1], args[2], args[3]);
+                    string onbnameev = "";
+                    if (File.Exists(@"C:\\envname.txt"))
+                    {
+                        onbnameev = File.ReadAllText(@"C:\\envname.txt");
+                    }
+                    return AppConfig.UpdateAppConfigValue(onbnameev, args[2], args[3]);
                 case "-setonbrd":
-                    return AppConfig.UpdateMasterConfig(args[1], args[2], args[3]);
+                    string onbnamemaster = "";
+                    if (File.Exists(@"C:\\envname.txt"))
+                    {
+                        onbnamemaster = File.ReadAllText(@"C:\\envname.txt");
+                    }
+                    return AppConfig.UpdateMasterConfig(onbnamemaster, args[2], args[3]);
                 //case "-uod":
                 //    return UOD.RequestUOD(args[1]);
                 //case "-uodlog":
@@ -37,16 +47,17 @@ namespace CIHelper
                 case "-changeenvironment":
                     return ChangeEnvironment.ChangeEchoEnvironment(args[1], args[2]);
                 case "-changeenvironmentxml":
-                    string onbname = "Dummy";
-                    string upname = "Dummyup";
+                    string onbname = null;
+                    string upname = null;
                     if (File.Exists(@"C:\\envname.txt"))
                     {
                         onbname = File.ReadAllText(@"C:\\envname.txt");
                     }
-                    if (File.Exists("@C:\\envnameup.txt"))
+                    if (File.Exists(@"C:\\envnameup.txt"))
                     {
-                        upname = File.ReadAllText("@C:\\envnameup.txt");
+                        upname = File.ReadAllText(@"C:\\envnameup.txt");
                     }
+                    Console.WriteLine("Environment XML Enviroments");
                     return ChangeEnvironment.ChangeEchoEnvironmentXml(args[1], upname, args[3], onbname);
                 case "-changeparametersxml":
                     return ChangeEnvironment.ChangeEchoParametersXml(args[1], args[2]);
@@ -88,7 +99,12 @@ namespace CIHelper
                 case "-results":
                     return SaveTestResults.SaveTestRunResults(args[1]);
                 case "-rcloud":
-                    string nameRCloud = GenerateEnvName(args[3].ToLower().Contains("onb"));
+                    string nameRCloud = "";
+                    if (args[1].ToLower() == "create")
+                    {
+                        Console.WriteLine("Updating Environment");
+                        nameRCloud = GenerateEnvName(args[3].ToLower().Contains("onb"));
+                    }
                     if (args.Length == 4)
                     {
                         return RCloud.ExecuteRCloudCommand(args[1], nameRCloud, args[3]);
@@ -142,9 +158,14 @@ namespace CIHelper
                     return apiStatusUpdateStage.updateStatusWithCurrentStage(args[4], args[5]);
                 case "-applyoneoffs":
                     var result = ApiJira.GetOneoffJiras();
-                    if(ApiJira.ApplyOneoffs(result, args[1]) == 0)
+                    string onbnameoneoffs = "";
+                    if (File.Exists(@"C:\\envnameup.txt"))
                     {
-                        return ApiJira.WaitOnStatus(args[1]);
+                        onbnameoneoffs = File.ReadAllText(@"C:\\envnameup.txt");
+                    }
+                    if (ApiJira.ApplyOneoffs(result, onbnameoneoffs) == 0)
+                    {
+                        return ApiJira.WaitOnStatus(onbnameoneoffs);
                     }
                     return 1;
                 case "-checkeverify":
@@ -239,7 +260,7 @@ namespace CIHelper
         private static string GenerateEnvName(bool onb)
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[8];
+            var stringChars = new char[5];
             var random = new Random();
 
             for (int i = 0; i < stringChars.Length; i++)
@@ -250,10 +271,12 @@ namespace CIHelper
             var finalString = new String(stringChars);
             if (onb)
             {
+                finalString = "onb" + finalString;
                 File.WriteAllText(@"C:\\envname.txt", finalString);
             }
             else
             {
+                finalString = "up" + finalString;
                 File.WriteAllText(@"C:\\envnameup.txt", finalString);
             }
             return finalString;

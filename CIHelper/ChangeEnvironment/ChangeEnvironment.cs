@@ -40,8 +40,9 @@ namespace CIHelper
         {
             try
             {
-                if (rcloudname!= null)
+                if (rcloudname != null)
                 {
+                    Console.WriteLine(rcloudname);
                     XmlDocument xDoc = new XmlDocument();
                     xDoc.Load(environmentXmlPath);
 
@@ -62,7 +63,7 @@ namespace CIHelper
                     xDoc.Save(environmentXmlPath);
                 }
 
-                if (rcloudname != null)
+                if (onbcloudname != null)
                 {
                     XmlDocument xDoc = new XmlDocument();
                     xDoc.Load(environmentXmlPath);
@@ -74,62 +75,75 @@ namespace CIHelper
                 }
                 var upPassword = "";
                 //Ultipro
-                using (var client = new HttpClient())
+                if (rcloudname != null)
                 {
-                    var response = client.GetAsync($"http://deploy.newgen.corp/env/{rcloudname}");
-                    var responseString = response.Result.Content.ReadAsStringAsync().Result;
-                    dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
-                    upPassword = envGetObject.creds.sa;
+                    using (var client = new HttpClient())
+                    {
+                        var response = client.GetAsync($"http://deploy.newgen.corp/env/{rcloudname}");
+                        var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                        dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
+                        upPassword = envGetObject.creds.sa;
+                    }
                 }
                 var onbPassword = "";
                 //Ultipro
-                using (var client = new HttpClient())
+                if (onbcloudname != null)
                 {
-                    var response = client.GetAsync($"http://deploy.newgen.corp/env/{onbcloudname}");
-                    var responseString = response.Result.Content.ReadAsStringAsync().Result;
-                    dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
-                    onbPassword = envGetObject.creds.sa;
+                    using (var client = new HttpClient())
+                    {
+                        var response = client.GetAsync($"http://deploy.newgen.corp/env/{onbcloudname}");
+                        var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                        dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
+                        onbPassword = envGetObject.creds.sa;
+                    }
                 }
 
                 XmlDocument doc = new XmlDocument();
-                doc.Load(environmentXmlPath);
-                XmlNodeList userNodes = doc.GetElementsByTagName("UltiPro");
-                Console.WriteLine(userNodes.Count);
-                Console.WriteLine(userNodes.ToString());
-                foreach (XmlNode userNode in userNodes)
+                if (rcloudname != null)
                 {
-                    var test = userNode.FirstChild;
-                    while (test != null)
+                    doc.Load(environmentXmlPath);
+                    XmlNodeList userNodes = doc.GetElementsByTagName("UltiPro");
+                    Console.WriteLine(userNodes.Count);
+                    Console.WriteLine(userNodes.ToString());
+                    foreach (XmlNode userNode in userNodes)
                     {
-                        if (test.Attributes["Password"] != null)
+                        var test = userNode.FirstChild;
+                        while (test != null)
                         {
-                            test.Attributes["Password"].Value = upPassword;
-                            //break;
+                            if (test.Attributes["Password"] != null)
+                            {
+                                test.Attributes["Password"].Value = upPassword;
+                                //break;
+                            }
+                            test = test.NextSibling;
                         }
-                        test = test.NextSibling;
                     }
+
+                    doc.Save(environmentXmlPath);
                 }
 
-                doc.Save(environmentXmlPath);
-
-                userNodes = doc.GetElementsByTagName("Onboarding");
-
-                foreach (XmlNode userNode in userNodes)
+                if (onbcloudname != null)
                 {
-                    var test = userNode.FirstChild;
-                    while (test != null)
-                    {
-                        if (test.Attributes != null && test.Attributes.Count > 2 && test.Attributes["Password"] != null)
-                        {
-                            test.Attributes["Password"].Value = onbPassword;
-                            //break;
-                        }
-                        test = test.NextSibling;
-                        Console.WriteLine(test);
-                    }
-                }
+                    doc.Load(environmentXmlPath);
+                    XmlNodeList userNodesTwo = doc.GetElementsByTagName("Onboarding");
 
-                doc.Save(environmentXmlPath);
+                    foreach (XmlNode userNode in userNodesTwo)
+                    {
+                        var test = userNode.FirstChild;
+                        while (test != null)
+                        {
+                            if (test.Attributes != null && test.Attributes.Count > 2 && test.Attributes["Password"] != null)
+                            {
+                                test.Attributes["Password"].Value = onbPassword;
+                                //break;
+                            }
+                            test = test.NextSibling;
+                            Console.WriteLine(test);
+                        }
+                    }
+
+                    doc.Save(environmentXmlPath);
+                }
             }
             catch (Exception e)
             {

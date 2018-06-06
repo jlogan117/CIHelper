@@ -12,8 +12,9 @@ namespace CIHelper.CreateRcloud
 {
     public static class RCloud
     {
-        public static int ExecuteRCloudCommand(string command, string name, string product, string owner = "GabrielN", string build = "latest")
+        public static int ExecuteRCloudCommand(string command, string name, string product, string owner = "hit_ci", string build = "latest")
         {
+            owner = "hit_ci";
             if (product.ToLower().Contains("onb"))
             {
                 if (command.ToLower() == "all")
@@ -30,6 +31,7 @@ namespace CIHelper.CreateRcloud
                     {
                         name = File.ReadAllText(@"C:\\envname.txt");
                     }
+                    Console.WriteLine("Deleting Environment......", name);
                     //File.WriteAllText(@"C:\\envname.txt", finalString);
                     return DeleteIfExists(name, owner);
                 }
@@ -117,6 +119,7 @@ namespace CIHelper.CreateRcloud
                     {
                         name = File.ReadAllText(@"C:\\envnameup.txt");
                     }
+                    Console.WriteLine("Deleting Environment......", name);
                     return DeleteIfExists(name, owner);
                 }
 
@@ -181,7 +184,7 @@ namespace CIHelper.CreateRcloud
             return 1;
         }
 
-        private static int DeleteIfExists(string name = "ONBCITEST", string owner = "GabrielN")
+        private static int DeleteIfExists(string name = "ONBCITEST", string owner = "hit_ci")
         {
             Console.WriteLine($"CHECKING IF {name} ALREADY EXISTS");
             if (GetRCloud(name, owner) != 0)
@@ -192,7 +195,7 @@ namespace CIHelper.CreateRcloud
             return 0;
         }
 
-        public static int DeleteRCloud(string name = "ONBCITEST", string owner = "GabrielN")
+        public static int DeleteRCloud(string name = "ONBCITEST", string owner = "hit_ci")
         {
             Console.WriteLine($"INITIATING {name} DELETION...");
             var response = DeleteRequest($@"http://deploy/env/{name}?owner={owner}&email=james_logan@ultimatesoftware.com&team=HIT");
@@ -222,7 +225,7 @@ namespace CIHelper.CreateRcloud
 
         }
 
-        public static int GetRCloud(string name = "ONBCITEST", string owner = "GabrielN")
+        public static int GetRCloud(string name = "ONBCITEST", string owner = "hit_ci")
         {
             Console.WriteLine($"DETERMINING IF {name} EXISTS...");
             return GetUserRequest($@"http://deploy/env?owner={owner}&team=HIT", name);
