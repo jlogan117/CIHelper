@@ -158,6 +158,10 @@ namespace CIHelper
                     return apiStatusUpdateStage.updateStatusWithCurrentStage(args[4], args[5]);
                 case "-applyoneoffs":
                     var result = ApiJira.GetOneoffJiras();
+
+                    List<string> extraOneoffsList = File.ReadAllLines(@"\\denver2\groups\HIT\OneoffsForCi\oneofflist.txt").ToList();
+                    result.AddRange(extraOneoffsList);
+
                     string onbnameoneoffs = "";
                     if (File.Exists(@"C:\\envnameup.txt"))
                     {

@@ -17,7 +17,7 @@ namespace CIHelper
         public static List<string> GetOneoffJiras()
         {
             //http://wxvdepdprgud077:8000/api/jirasearch?jql= project = UltiPro AND type = OneOff AND "Target Customer Deployment Date" > 0d AND "Target Customer Deployment Date" < 7d AND status not in (Canceled) ORDER BY key ASC
-            string query = @"jql= project = UltiPro AND type = OneOff AND ""Target Customer Deployment Date"" >= 0d AND ""Target Customer Deployment Date"" < 10d AND status not in (Canceled) ORDER BY ""Target Customer Deployment Date"" ASC, key ASC";
+            string query = @"jql= project = UltiPro AND type = Patch AND ""Target Customer Deployment Date"" >= 0d AND ""Target Customer Deployment Date"" < 10d AND status not in (Canceled) ORDER BY ""Target Customer Deployment Date"" ASC, key ASC";
             var upbuildReponse = client.GetAsync("http://wxvdepdprgud077:8000/api/jirasearch?" + query);
             var response = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
             var jiraNumberArray = response.Split(new string[] { "jiraNumber" }, StringSplitOptions.None).ToList();
