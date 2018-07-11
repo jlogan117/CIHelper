@@ -159,8 +159,11 @@ namespace CIHelper
                 case "-applyoneoffs":
                     var result = ApiJira.GetOneoffJiras();
 
-                    List<string> extraOneoffsList = File.ReadAllLines(@"\\denver2\groups\HIT\OneoffsForCi\oneofflist.txt").ToList();
-                    result.AddRange(extraOneoffsList);
+                    if (File.Exists(@"\\denver2\groups\HIT\OneoffsForCi\oneofflist.txt"))
+                    {
+                        List<string> extraOneoffsList = File.ReadAllLines(@"\\denver2\groups\HIT\OneoffsForCi\oneofflist.txt").ToList();
+                        result.AddRange(extraOneoffsList);
+                    }
 
                     string onbnameoneoffs = "";
                     if (File.Exists(@"C:\\envnameup.txt"))
