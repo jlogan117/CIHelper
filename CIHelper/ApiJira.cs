@@ -36,6 +36,7 @@ namespace CIHelper
             // { "one_offs_list":"ULTI-245748, ULTI-244508","owner":"shawnlo","team":"hit","name":"LakersR1","operation":"one_offs"}
             //http://deploy/env/LakersR1 
             string oneoffString = "";
+            owner = "hit_ci";
             for (int i = 0; i < oneOffList.Count; i++)
             {
                 if (i == 0)

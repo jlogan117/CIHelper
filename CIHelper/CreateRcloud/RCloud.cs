@@ -69,7 +69,7 @@ namespace CIHelper.CreateRcloud
                 if (command.ToLower() == "create" && build == "latest")
                 {
                     //"env/{0}?owner={1}&email={2}&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true
-                    int upCreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&identity=true", timeout: 7200);
+                    int upCreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&identity=false", timeout: 7200);
                     if (upCreateValue == 0)
                     {
                         return upCreateValue;
@@ -81,14 +81,14 @@ namespace CIHelper.CreateRcloud
                         Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
                         return deleteResult;
                     }
-                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true", timeout: 7200);
+                    return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&identity=false", timeout: 7200);
 
                 }
                 if (command.ToLower() == "create" && build != "latest")
                 {
                     if (build != "previous")
                     {
-                        return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={build}", timeout: 7200);
+                        return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={build}&identity=false", timeout: 7200);
                     }
                     else
                     {
@@ -98,7 +98,7 @@ namespace CIHelper.CreateRcloud
                         var prevUpbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
                         //prevUpbuild.Substring(53).Split('"')[0]
                         prevUpbuild = prevUpbuild.Substring(53).Split('"')[0];
-                        var upcreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}", timeout: 7200);
+                        var upcreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}&identity=false", timeout: 7200);
                         if (upcreateValue == 0)
                         {
                             return upcreateValue;
@@ -110,7 +110,7 @@ namespace CIHelper.CreateRcloud
                             Console.WriteLine("FAILED to Delete RCloud on second RCloud creation.");
                             return deleteResult;
                         }
-                        return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}", timeout: 7200);
+                        return CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}&identity=false", timeout: 7200);
                     }
                 }
                 if (command.ToLower() == "delete")
