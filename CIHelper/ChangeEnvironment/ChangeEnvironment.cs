@@ -73,77 +73,77 @@ namespace CIHelper
                     xDoc.InnerXml = newdoc;
                     xDoc.Save(environmentXmlPath);
                 }
-                var upPassword = "";
-                //Ultipro
-                if (rcloudname != null)
-                {
-                    using (var client = new HttpClient())
-                    {
-                        var response = client.GetAsync($"http://deploy.newgen.corp/env/{rcloudname}");
-                        var responseString = response.Result.Content.ReadAsStringAsync().Result;
-                        dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
-                        upPassword = envGetObject.creds.sa;
-                    }
-                }
-                var onbPassword = "";
-                //Ultipro
-                if (onbcloudname != null)
-                {
-                    using (var client = new HttpClient())
-                    {
-                        var response = client.GetAsync($"http://deploy.newgen.corp/env/{onbcloudname}");
-                        var responseString = response.Result.Content.ReadAsStringAsync().Result;
-                        dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
-                        onbPassword = envGetObject.creds.sa;
-                    }
-                }
+                //var upPassword = "";
+                ////Ultipro
+                //if (rcloudname != null)
+                //{
+                //    using (var client = new HttpClient())
+                //    {
+                //        var response = client.GetAsync($"http://deploy.newgen.corp/env/{rcloudname}");
+                //        var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                //        dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
+                //        upPassword = envGetObject.creds.sa;
+                //    }
+                //}
+                //var onbPassword = "";
+                ////Ultipro
+                //if (onbcloudname != null)
+                //{
+                //    using (var client = new HttpClient())
+                //    {
+                //        var response = client.GetAsync($"http://deploy.newgen.corp/env/{onbcloudname}");
+                //        var responseString = response.Result.Content.ReadAsStringAsync().Result;
+                //        dynamic envGetObject = JsonConvert.DeserializeObject(responseString);
+                //        onbPassword = envGetObject.creds.sa;
+                //    }
+                //}
 
-                XmlDocument doc = new XmlDocument();
-                if (rcloudname != null)
-                {
-                    doc.Load(environmentXmlPath);
-                    XmlNodeList userNodes = doc.GetElementsByTagName("UltiPro");
-                    Console.WriteLine(userNodes.Count);
-                    Console.WriteLine(userNodes.ToString());
-                    foreach (XmlNode userNode in userNodes)
-                    {
-                        var test = userNode.FirstChild;
-                        while (test != null)
-                        {
-                            if (test.Attributes["Password"] != null)
-                            {
-                                test.Attributes["Password"].Value = upPassword;
-                                //break;
-                            }
-                            test = test.NextSibling;
-                        }
-                    }
+                //XmlDocument doc = new XmlDocument();
+                //if (rcloudname != null)
+                //{
+                //    doc.Load(environmentXmlPath);
+                //    XmlNodeList userNodes = doc.GetElementsByTagName("UltiPro");
+                //    Console.WriteLine(userNodes.Count);
+                //    Console.WriteLine(userNodes.ToString());
+                //    foreach (XmlNode userNode in userNodes)
+                //    {
+                //        var test = userNode.FirstChild;
+                //        while (test != null)
+                //        {
+                //            if (test.Attributes["Password"] != null)
+                //            {
+                //                test.Attributes["Password"].Value = upPassword;
+                //                //break;
+                //            }
+                //            test = test.NextSibling;
+                //        }
+                //    }
 
-                    doc.Save(environmentXmlPath);
-                }
+                //    doc.Save(environmentXmlPath);
+                //}
 
-                if (onbcloudname != null)
-                {
-                    doc.Load(environmentXmlPath);
-                    XmlNodeList userNodesTwo = doc.GetElementsByTagName("Onboarding");
+                //if (onbcloudname != null)
+                //{
+                //    doc.Load(environmentXmlPath);
+                //    XmlNodeList userNodesTwo = doc.GetElementsByTagName("Onboarding");
 
-                    foreach (XmlNode userNode in userNodesTwo)
-                    {
-                        var test = userNode.FirstChild;
-                        while (test != null)
-                        {
-                            if (test.Attributes != null && test.Attributes.Count > 2 && test.Attributes["Password"] != null)
-                            {
-                                test.Attributes["Password"].Value = onbPassword;
-                                //break;
-                            }
-                            test = test.NextSibling;
-                            Console.WriteLine(test);
-                        }
-                    }
+                //    foreach (XmlNode userNode in userNodesTwo)
+                //    {
+                //        var test = userNode.FirstChild;
+                //        while (test != null)
+                //        {
+                //            if (test.Attributes != null && test.Attributes.Count > 2 && test.Attributes["Password"] != null)
+                //            {
+                //                test.Attributes["Password"].Value = onbPassword;
+                //                //break;
+                //            }
+                //            test = test.NextSibling;
+                //            Console.WriteLine(test);
+                //        }
+                //    }
 
-                    doc.Save(environmentXmlPath);
-                }
+                //    doc.Save(environmentXmlPath);
+                //}
             }
             catch (Exception e)
             {
