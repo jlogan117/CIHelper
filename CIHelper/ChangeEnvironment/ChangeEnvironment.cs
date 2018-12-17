@@ -157,7 +157,7 @@ namespace CIHelper
         public static string GetEchoParametersXml()
         {
             XmlDocument xdoc = new XmlDocument();
-            xdoc.Load(@"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml");
+            xdoc.Load(@"C:\Projects\UltiPro.NET\AutomatedTests\Echo\Echo.Parameters.xml");
 
             XmlNodeList userNodes = xdoc.GetElementsByTagName("Configuration");
 
@@ -172,7 +172,7 @@ namespace CIHelper
             return ".NET was not found in App.config";
         }
 
-        public static int ChangeEchoParametersXml(string pipeline, bool rotate = false, string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml", string specifiedBrowser = null)
+        public static int ChangeEchoParametersXml(string pipeline, bool rotate = false, string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\Echo.Parameters.xml", string specifiedBrowser = null)
         {
             string browsername = null;
             if(specifiedBrowser != null)
@@ -228,7 +228,7 @@ namespace CIHelper
             return 0;
         }
 
-        public static int ChangeEchoParametersXml(string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\lib\Echo.Parameters.xml", string browsername = "Chrome")
+        public static int ChangeEchoParametersXml(string parametersXmlPath = @"C:\Projects\UltiPro.NET\AutomatedTests\Echo\Echo.Parameters.xml", string browsername = "Chrome")
         {
             try
             {
