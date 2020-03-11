@@ -97,7 +97,7 @@ namespace CIHelper.CreateRcloud
                         var upbuildReponse = client.GetAsync("http://deploy/products/ultipro");
                         var prevUpbuild = upbuildReponse.Result.Content.ReadAsStringAsync().Result;
                         //prevUpbuild.Substring(53).Split('"')[0]
-                        prevUpbuild = prevUpbuild.Substring(53).Split('"')[0];
+                        prevUpbuild = prevUpbuild.Substring(58).Split('"')[0];
                         var upcreateValue = CreateAndWaitRCloud(name: name, url: $@"http://deploy/env/{name}?owner={owner}&email=javier_nunez@ultimatesoftware.com&team=HIT&type=shared_supersite&dbs=ULTIPRO_SB122,ULTIPRO_CALENDAR,ULTIPRO_HRPMCO&apply_oneoffs=true&apply_warmup=true&rev={prevUpbuild}&identity=false", timeout: 7200);
                         if (upcreateValue == 0)
                         {

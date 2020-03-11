@@ -18,7 +18,6 @@ C:\Projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.exe
 C:\Projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.pdb
 C:\Projects\CIHelper\CIHelper\bin\Debug\CIHelper.exe
 C:\Projects\CIHelper\CIHelper\bin\Debug\CIHelper.pdb
-C:\Projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
 C:\projects\CIHelperApp\CIHelper\bin\Debug\CIHelper.exe.config
 C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.exe
 C:\projects\CIHelperApp\CIHelper\obj\x86\Debug\CIHelper.pdb
@@ -43,3 +42,6 @@ C:\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.xml
 C:\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojResolveAssemblyReference.cache
 C:\projects\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.dll
 C:\projects\CIHelper\CIHelper\bin\Debug\Newtonsoft.Json.xml
+C:\projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csprojAssemblyReference.cache
+C:\projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csproj.CoreCompileInputs.cache
+C:\projects\CIHelper\CIHelper\obj\x86\Debug\CIHelper.csproj.CopyComplete
